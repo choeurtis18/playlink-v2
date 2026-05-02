@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  role      String   @default("editor") // editor | admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Game {
+  id             String     @id @default(cuid())
+  name           String     @unique
+  slug           String     @unique
+  description    String?
+  icon           String?
+  colorMain      String
+  colorSecondary String
+  active         Boolean    @default(true)
+  order          Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  categories Category[]
+
+  @@map("games")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  gameId      String
+  game        Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  cards Card[]
+
+  @@unique([gameId, slug])
+  @@map("categories")
+}
+
+model Card {
+  id         String   @id @default(cuid())
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  text       String
+  difficulty String?  // easy | medium | hard
+  tags       String[]
+  active     Boolean  @default(true)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("cards")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String   // created_card | updated_card | deleted_card | etc
+  entity    String   // card | category | game
+  entityId  String
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
