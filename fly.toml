@@ -1,9 +1,6 @@
 app = "playlink-api"
 primary_region = "cdg"
 
-[build]
-  builder = "paketobuildpacks"
-
 [[services]]
   internal_port = 3002
   protocol = "tcp"
