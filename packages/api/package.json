@@ -2,8 +2,7 @@
   "name": "@playlink/api",
   "version": "0.0.1",
   "private": true,
-  "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
