@@ -5,6 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "prebuild": "pnpm --filter @playlink/shared run build",
     "build": "prisma generate && tsc",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",
