@@ -55,10 +55,3 @@ export const CreateCardSchema = z.object({
   difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
   tags: z.array(z.string()).optional(),
 });
-
-export type Card = z.infer<typeof CardSchema>;
-export type Category = z.infer<typeof CategorySchema>;
-export type Game = z.infer<typeof GameSchema>;
-export type CreateGamePayload = z.infer<typeof CreateGameSchema>;
-export type CreateCategoryPayload = z.infer<typeof CreateCategorySchema>;
-export type CreateCardPayload = z.infer<typeof CreateCardSchema>;
