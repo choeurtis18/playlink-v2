@@ -19,8 +19,8 @@ app.use('/api', router);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`[API] Running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[API] Running on http://0.0.0.0:${PORT}`);
 });
 
 export default app;
