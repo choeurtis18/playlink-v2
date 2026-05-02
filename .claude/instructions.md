@@ -1,59 +1,57 @@
 # Instructions pour Claude Code — Playlink Monorepo
 
-## Architecture Globale
-- **Monorepo** : packages/shared, packages/api, packages/app, packages/admin
-- **Shared** : Types, validators, constants (importés partout)
-- **API** : Express + Prisma + Supabase PostgreSQL
-- **App** : Next.js (user-facing party/offline games)
-- **Admin** : Next.js (content management back-office)
+## État du projet (2026-05-02)
+Toutes les phases sont terminées et fonctionnelles en local. Ne pas repartir de zéro — lire `context.md` et `architecture.md` pour comprendre les décisions déjà prises.
 
-## Conventions Globales
-- TypeScript strict mode obligatoire
-- Functional components + hooks (React)
-- Zod pour validation (API + forms)
-- Error handling explicite partout
-- Comments: expliquer le WHY, pas le WHAT
-- Naming: camelCase (JS), kebab-case (CSS)
+## Architecture
+- **Monorepo** pnpm : `packages/shared`, `packages/api`, `packages/app`, `packages/admin`
+- **API** Express + Prisma (port 3002) — routes publiques + admin protégées par Bearer JWT
+- **App** Next.js 14, Zustand persist, Framer Motion (port 3000)
+- **Admin** Next.js 14, Supabase Auth (port 3001)
+- **Shared** Zod schemas + constants, compilé avec tsup (CJS+ESM+DTS)
 
-## Per-Package Rules
+## Conventions
 
-### Shared
-- Types export via interfaces (prefer interface > type)
-- Validators: Zod schemas centralisés
-- Constants: game IDs, colors, difficulty levels
-- No external dependencies except zod
+### Général
+- TypeScript strict — toujours `tsc --noEmit` après chaque changement (api + admin + app)
+- Tous les messages utilisateur en **français** (UI et erreurs API)
+- Pas de commentaires sauf si le WHY est non-évident
+- Pas d'abstractions prématurées
 
 ### API
-- Controllers: business logic isolation
-- Routes: HTTP routing + middleware chain
-- Middleware: auth, cors, error handling
-- Prisma: queries via models
-- No business logic in route handlers
-
-### App
-- Components: single responsibility
-- Hooks: state + API calls
-- Zustand: global game state only
-- API client: centralized fetch helper
-- LocalStorage: offline persistence layer
+- Logique métier dans les controllers uniquement, pas dans les routes
+- Erreurs Prisma P2002 (unique constraint) et P2025 (not found) interceptées dans `errorHandler.ts`
+- Routes `/games/export` et `/categories/export` déclarées **avant** `/games/:id` pour éviter la collision Express
+- Import CSV : `$transaction` Prisma — tout ou rien, jamais partiel
 
 ### Admin
-- Forms: structured validation with Zod
-- Tables: data-driven, searchable
-- Auth: Supabase JWT
-- API client: error handling + retry logic
+- Rafraîchissement des listes : `refresh` counter dans les deps de `useCallback` + `invalidate()` après chaque mutation (create/update/delete/import)
+- Token Supabase : intercepteur Axios appelle `supabase.auth.getSession()` à chaque requête
+- Auth layout : `onAuthStateChange` uniquement pour les décisions de redirect (évite les faux redirects sur token expiré)
+- Dropdowns filtres : toujours `?limit=100` pour éviter la troncature pagination
+- Après un fix : **relancer le serveur dev** — refresh navigateur seul ne suffit pas
 
-## Deployment
-- App (Vercel): https://playlink.app
-- Admin (Vercel): https://admin.playlink.app
-- API (Render/Railway): https://api.playlink.app
+### App
+- `fetchGames` se relance au `visibilitychange` (synchro après modifications en admin)
+- Store Zustand : clé `playlink-store`, persiste `games`, `lastSyncAt`, `darkMode` uniquement
+- Guard `game/[slug]/page.tsx` : si `activeCategoryId` set mais catégorie introuvable ou deck vide → `resetDeck()`
 
-## Testing Strategy
-- MVP: dev + manual testing
-- Phase 2+: Vitest (unit), Cypress (E2E)
+## CSV Import/Export
+- Détection auto séparateur `,` vs `;` (Excel français utilise `;`)
+- `active` : case-insensitive (`TRUE`/`true` tous acceptés)
+- Tags cartes : séparateur `|` (ex: `mensonge|famille`)
+- Export : BOM UTF-8 pour Excel
+- Import : upsert — id existant = update, id vide/inconnu = create, erreur = rollback total
 
-## Code Quality Standards
-- No console.log in production code
-- Error boundaries in React components
-- Explicit error handling at system boundaries
-- Type-safe API client with proper error types
+## Routes API
+
+### Publiques
+- `GET /api/games` — jeux actifs avec catégories
+- `GET /api/cards/export` — export complet pour cache offline (5 min cache)
+
+### Admin (Bearer JWT)
+- `GET/POST /api/admin/games` + `GET/PUT/DELETE /api/admin/games/:id`
+- `GET /api/admin/games/export` + `POST /api/admin/games/import`
+- Idem pour `/categories` et `/cards`
+- `POST /api/admin/bulk-import` — import texte brut cards (legacy)
+- `GET /api/admin/stats` — compteurs dashboard

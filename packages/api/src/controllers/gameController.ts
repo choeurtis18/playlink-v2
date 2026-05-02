@@ -34,7 +34,7 @@ export async function getGame(req: Request, res: Response, next: NextFunction): 
       where: { slug: req.params.gameId },
       include: gameInclude,
     });
-    if (!game) return next(createError('Game not found', 404));
+    if (!game) return next(createError('Jeu introuvable', 404));
     res.json({ success: true, data: game });
   } catch (err) {
     next(err);

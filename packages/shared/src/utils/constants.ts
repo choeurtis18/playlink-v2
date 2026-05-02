@@ -1,8 +1,8 @@
 export const GAME_IDS = {
-  ACTION_OR_TRUTH: 'action-or-truth',
+  ACTION_OR_TRUTH: 'action-ou-verite',
   ICEBREAKER: 'icebreaker',
-  DAMAGE_DEBATE: 'damage-debate',
-  BALANCE_YOUR_FRIEND: 'balance-your-friend',
+  DAMAGE_DEBATE: 'degat-debat',
+  BALANCE_YOUR_FRIEND: 'balance-ton-pote',
 } as const;
 
 export const GAME_NAMES = {

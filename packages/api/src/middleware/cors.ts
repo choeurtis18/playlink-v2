@@ -9,7 +9,9 @@ export const corsMiddleware = cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error(`CORS: origin ${origin} not allowed`));
+      const err = new Error(`CORS: origin ${origin} not allowed`) as Error & { statusCode: number };
+      err.statusCode = 403;
+      callback(err);
     }
   },
   credentials: true,
