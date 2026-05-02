@@ -55,3 +55,17 @@ export const CreateCardSchema = z.object({
   difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
   tags: z.array(z.string()).optional(),
 });
+
+export const UpdateGameSchema = CreateGameSchema.partial().extend({
+  active: z.boolean().optional(),
+  order: z.number().int().min(0).optional(),
+});
+
+export const UpdateCategorySchema = CreateCategorySchema.omit({ gameId: true }).partial().extend({
+  order: z.number().int().min(0).optional(),
+});
+
+export const UpdateCardSchema = CreateCardSchema.omit({ categoryId: true }).partial().extend({
+  active: z.boolean().optional(),
+  order: z.number().int().min(0).optional(),
+});

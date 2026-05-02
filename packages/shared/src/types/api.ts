@@ -28,7 +28,7 @@ export interface CreateCategoryPayload {
   description?: string;
 }
 
-export interface UpdateCategoryPayload extends Partial<CreateCategoryPayload> {}
+export interface UpdateCategoryPayload extends Partial<Omit<CreateCategoryPayload, 'gameId'>> {}
 
 export interface CreateCardPayload {
   categoryId: string;
