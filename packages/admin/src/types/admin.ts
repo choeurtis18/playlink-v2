@@ -24,6 +24,7 @@ export interface AdminCategory {
   name: string;
   slug: string;
   description: string | null;
+  icon: string | null;
   order: number;
   _count: { cards: number };
 }

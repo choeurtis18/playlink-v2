@@ -5,6 +5,7 @@ import { useGameStore } from '@/store/gameStore';
 import { Header } from '@/components/Header';
 import { CategoryPicker } from '@/components/CategoryPicker';
 import { PlayCard } from '@/components/PlayCard';
+import { PlayFooter } from '@/components/PlayFooter';
 
 interface PageProps {
   params: { slug: string };
@@ -30,7 +31,7 @@ export default function GamePage({ params }: PageProps) {
   if (!activeCategoryId) {
     return (
       <div className="flex flex-col min-h-[100dvh]">
-        <Header title={game.name} showBack />
+        <Header title={game.name} showBack gameIcon={game.icon} colorMain={game.colorMain} colorSecondary={game.colorSecondary} />
         <CategoryPicker game={game} onSelect={startDeck} />
       </div>
     );
@@ -57,12 +58,28 @@ export default function GamePage({ params }: PageProps) {
   };
 
   return (
-    <div className="flex flex-col min-h-[100dvh]">
-      <Header title={game.name} showBack onBack={resetDeck} />
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex flex-col min-h-[100dvh]"
+     style={{
+      background: `linear-gradient(90deg, ${game.colorMain}, ${game.colorSecondary})`,          
+     }}
+    >
+      <Header
+        title={game.name}
+        showBack
+        onBack={resetDeck}
+        gameIcon={game.icon}
+        colorMain={game.colorMain}
+        colorSecondary={game.colorSecondary}
+        subtitle={activeCategory?.name}
+        counter={`${currentIndex + 1} / ${deck.length}`}
+      />
+      <div className="flex-1 flex flex-col relative">
+        <div className="absolute bottom-0 right-0 text-[200px] opacity-5 pointer-events-none leading-none">
+          {game.icon}
+        </div>
         <PlayCard
           game={game}
-          categoryName={activeCategory?.name ?? ''}
+          category={activeCategory!}
           card={card}
           currentIndex={currentIndex}
           total={deck.length}
@@ -73,6 +90,14 @@ export default function GamePage({ params }: PageProps) {
           finished={finished}
         />
       </div>
+      <PlayFooter
+        game={game}
+        currentIndex={currentIndex}
+        total={deck.length}
+        onNext={handleNext}
+        onPrev={handlePrev}
+        finished={finished}
+      />
     </div>
   );
 }

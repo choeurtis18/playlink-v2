@@ -125,6 +125,7 @@ export default function CategoriesPage() {
               <th className="px-4 py-3 font-medium text-gray-600">Jeu</th>
               <th className="px-4 py-3 font-medium text-gray-600">Nom</th>
               <th className="px-4 py-3 font-medium text-gray-600">Slug</th>
+              <th className="px-4 py-3 font-medium text-gray-600 text-center">Icône</th>
               <th className="px-4 py-3 font-medium text-gray-600 text-center">Cartes</th>
               <th className="px-4 py-3 font-medium text-gray-600 text-center">Ordre</th>
               <th className="px-4 py-3 font-medium text-gray-600 w-20"></th>
@@ -132,15 +133,16 @@ export default function CategoriesPage() {
           </thead>
           <tbody className="divide-y divide-gray-50">
             {loading ? (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
+              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
             ) : categories.length === 0 ? (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Aucune catégorie trouvée.</td></tr>
+              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Aucune catégorie trouvée.</td></tr>
             ) : (
               categories.map((cat) => (
                 <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-4 py-3 text-gray-500 text-xs">{gameName(cat.gameId)}</td>
                   <td className="px-4 py-3 font-medium">{cat.name}</td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-500">{cat.slug}</td>
+                  <td className="px-4 py-3 text-center text-xl">{cat.icon ?? '—'}</td>
                   <td className="px-4 py-3 text-center text-gray-600">{cat._count.cards}</td>
                   <td className="px-4 py-3 text-center text-gray-500">{cat.order}</td>
                   <td className="px-4 py-3">

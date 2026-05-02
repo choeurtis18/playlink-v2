@@ -18,6 +18,7 @@ export interface ExportCategory {
   name: string;
   slug: string;
   description?: string;
+  icon?: string;
   order: number;
   cards: ExportCard[];
 }
@@ -78,7 +79,7 @@ export const useGameStore = create<GameStore>()(
       fetchGames: async () => {
         set({ isLoading: true });
         try {
-          const res = await fetch(`${API_URL}/api/cards/export`);
+          const res = await fetch(`${API_URL}/api/cards/export`, { cache: 'no-store' });
           if (!res.ok) throw new Error('API error');
           const json = await res.json() as { data: ExportGame[]; exportedAt: string };
           set({ games: json.data, lastSyncAt: json.exportedAt, isOffline: false, isLoading: false });

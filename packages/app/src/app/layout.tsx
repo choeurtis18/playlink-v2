@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Lilita_One } from 'next/font/google';
 import './globals.css';
 import { ThemeScript } from '@/components/ThemeScript';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const lilitaOne = Lilita_One({ subsets: ['latin'], weight: '400', variable: '--font-lilita' });
 
 export const metadata: Metadata = {
   title: 'Playlink',
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <ThemeScript />
       </head>
-      <body className={`${inter.variable} min-h-[100dvh] flex flex-col`}>
+      <body className={`${inter.variable} ${lilitaOne.variable} font-sans min-h-[100dvh] flex flex-col`}>
         <div className="flex-1 flex flex-col max-w-md mx-auto w-full">
           {children}
         </div>

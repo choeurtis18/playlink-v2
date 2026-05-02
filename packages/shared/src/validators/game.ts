@@ -16,6 +16,7 @@ export const CategorySchema = z.object({
   name: z.string().min(1),
   slug: z.string().min(1),
   description: z.string().optional(),
+  icon: z.string().optional(),
   cards: z.array(CardSchema),
   order: z.number(),
 });
@@ -47,6 +48,7 @@ export const CreateCategorySchema = z.object({
   name: z.string().min(1).max(100),
   slug: z.string().min(1).max(100),
   description: z.string().max(500).optional(),
+  icon: z.string().optional(),
 });
 
 export const CreateCardSchema = z.object({

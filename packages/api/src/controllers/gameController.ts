@@ -62,6 +62,7 @@ export async function exportCards(_req: Request, res: Response, next: NextFuncti
             name: true,
             slug: true,
             description: true,
+            icon: true,
             order: true,
             cards: {
               where: { active: true },

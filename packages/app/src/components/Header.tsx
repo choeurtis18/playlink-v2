@@ -1,57 +1,72 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Moon, Sun, ArrowLeft, WifiOff } from 'lucide-react';
+import { ArrowLeft, WifiOff } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
+import Image from 'next/image';
 
 interface HeaderProps {
   title?: string;
   showBack?: boolean;
   onBack?: () => void;
+  gameIcon?: string;
+  colorMain?: string;
+  colorSecondary?: string;
+  subtitle?: string;
+  counter?: string;
 }
 
-export function Header({ title, showBack, onBack }: HeaderProps) {
-  const { darkMode, toggleDark, isOffline } = useGameStore();
+export function Header({ title, showBack, onBack, gameIcon, colorMain, colorSecondary, subtitle, counter }: HeaderProps) {
+  const { isOffline } = useGameStore();
   const router = useRouter();
 
   const handleBack = onBack ?? (() => router.push('/'));
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 h-14">
-      <div className="w-10">
-        {showBack && (
-          <button
-            onClick={handleBack}
-            className="p-2 -ml-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-            aria-label="Retour"
-          >
-            <ArrowLeft size={20} />
-          </button>
+    <header className="p-4 py-6 border-white/10"
+      style={
+        counter ?
+        { } :
+        { background: `linear-gradient(130deg, ${colorMain}, ${colorSecondary})` }}
+    >
+      <div className="flex items-center justify-between gap-4">
+        <div className="w-16">
+          {showBack && (
+            <button
+              onClick={handleBack}
+              className="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Retour"
+            >
+              <ArrowLeft size={20} className="text-white" />
+            </button>
+          )}
+        </div>
+
+        {title && showBack && (
+          <div className="flex flex-col items-center gap-1">
+            <h1 className="text-lg font-semibold text-white uppercase">{title}</h1>
+            {counter ? (
+              <>
+                <p className="text-sm text-white/80">{subtitle}</p>
+              </>
+            ) : (
+              <p className="text-xs text-white/80">{subtitle || '4 CATÉGORIES'}</p>
+            )}
+          </div>
         )}
+
+        <div className="w-16 flex justify-end">
+          {counter && (
+            <p className="text-lg text-white">{counter}</p>
+          )}
+          {isOffline && (
+            <span title="Mode hors-ligne">
+              <WifiOff size={16} className="text-amber-400" />
+            </span>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        {title ? (
-          <h1 className="text-base font-semibold truncate max-w-[200px]">{title}</h1>
-        ) : (
-          <span className="text-xl font-black tracking-tight">
-            Play<span className="text-indigo-500">link</span>
-          </span>
-        )}
-        {isOffline && (
-          <span title="Mode hors-ligne">
-            <WifiOff size={14} className="text-amber-500" />
-          </span>
-        )}
-      </div>
-
-      <button
-        onClick={toggleDark}
-        className="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-        aria-label={darkMode ? 'Mode clair' : 'Mode sombre'}
-      >
-        {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-      </button>
     </header>
   );
 }

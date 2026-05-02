@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { api, apiError } from '@/lib/api';
 import { slugify } from '@/lib/utils';
+import { EmojiPicker } from '@/components/EmojiPicker';
 import type { AdminGame, AdminCategory } from '@/types/admin';
 
 interface CategoryFormProps {
@@ -20,6 +21,7 @@ export function CategoryForm({ games, category, defaultGameId, onSuccess, onCanc
   const [slug, setSlug] = useState(category?.slug ?? '');
   const [slugManual, setSlugManual] = useState(isEdit);
   const [description, setDescription] = useState(category?.description ?? '');
+  const [icon, setIcon] = useState(category?.icon ?? '');
   const [order, setOrder] = useState(category?.order ?? 0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,7 @@ export function CategoryForm({ games, category, defaultGameId, onSuccess, onCanc
       name,
       slug,
       description: description || undefined,
+      icon: icon || undefined,
       ...(isEdit ? { order } : {}),
     };
     try {
@@ -88,6 +91,11 @@ export function CategoryForm({ games, category, defaultGameId, onSuccess, onCanc
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className="input resize-none" />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Icône</label>
+        <EmojiPicker value={icon} onChange={setIcon} />
       </div>
 
       {isEdit && (
