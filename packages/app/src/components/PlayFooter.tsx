@@ -40,7 +40,7 @@ export function PlayFooter({ game, currentIndex, total, onNext, onPrev, finished
           whileTap={{ scale: 0.98 }}
           className="flex-1 py-3 px-6 rounded-2xl text-white font-bold transition-all shadow-lg flex items-center justify-center gap-2"
           style={{ 
-            background: `linear-gradient(90deg, ${game.colorSecondary}, ${game.colorSecondary})`,
+            background: `${game.colorSecondary}`,
           }}
           aria-label="Carte suivante"
         >

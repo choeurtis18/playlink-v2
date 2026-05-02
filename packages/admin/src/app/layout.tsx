@@ -7,6 +7,10 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 export const metadata: Metadata = {
   title: 'Playlink Admin',
   description: 'Panneau d\'administration Playlink',
+  icons: {
+    icon: '/playlink-logo.svg',
+    apple: '/playlink-logo.svg',
+  },
   robots: 'noindex',
 };
 

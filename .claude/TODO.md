@@ -5,43 +5,45 @@
 - [x] Create packages/{shared,api,app,admin}
 - [x] Setup .claude folder (instructions, context, architecture)
 - [x] Create @playlink/shared package (types, validators, constants)
-- [ ] Initialize Git + initial commit
-- [ ] Verify pnpm install + structure works
+- [x] Initialize Git + initial commit
+- [x] Verify pnpm install + structure works
 
-## Phase 2: API Backend (Week 1-2)
-- [ ] Express server init + middleware (cors, error handler)
-- [ ] Prisma schema + initial migrations
-- [ ] Supabase setup (PostgreSQL + Auth)
-- [ ] Seed database (4 games, 3-4 categories each, 150+ cards)
-- [ ] Public routes (GET /api/games, /api/cards/export)
-- [ ] Protected admin routes (POST/PUT/DELETE)
-- [ ] Bulk import endpoint (CSV/JSON upload)
-- [ ] Test: API running on localhost:3002, endpoints respond
+## Phase 2: API Backend ✓ (Week 1-2)
+- [x] Express server init + middleware (cors, error handler)
+- [x] Prisma schema + initial migrations
+- [x] Supabase setup (PostgreSQL + Auth)
+- [x] Seed database (4 games, 3-4 categories each, 150+ cards)
+- [x] Public routes (GET /api/games, /api/cards/export)
+- [x] Protected admin routes (POST/PUT/DELETE)
+- [x] Bulk import endpoint (CSV/JSON upload)
+- [x] Test: API running on localhost:3002, endpoints respond
 
-## Phase 3: App Frontend (Week 2-3)
-- [ ] Next.js setup + TypeScript config
-- [ ] Layout (Header, Footer, dark mode provider)
-- [ ] Design tokens (Tailwind config, CSS variables)
-- [ ] Game selection page (list 4 games)
-- [ ] Category selection component
-- [ ] Card display component (animated)
-- [ ] Zustand store (game state)
-- [ ] API client + useApi hook
-- [ ] localStorage persistence + sync on launch
-- [ ] Responsive design (mobile-first 370px → desktop)
-- [ ] Test: App running on localhost:3000, can play offline
+## Phase 3: App Frontend ✓ (Week 2-3)
+- [x] Next.js setup + TypeScript config
+- [x] Layout (Header, Footer, dark mode provider)
+- [x] Design tokens (Tailwind config, CSS variables)
+- [x] Game selection page (list 4 games)
+- [x] Category selection component
+- [x] Card display component (animated)
+- [x] Zustand store (game state)
+- [x] API client + useApi hook
+- [x] localStorage persistence + sync on launch
+- [x] Responsive design (mobile-first 370px → desktop)
+- [x] UI Design implementation (Lilita One font, gradients, frosted glass)
+- [x] Test: App running on localhost:3000, can play offline
 
-## Phase 4: Admin Back-Office (Week 3-4)
-- [ ] Next.js setup + TypeScript config
-- [ ] Auth page (Supabase login)
-- [ ] Dashboard overview (stats: games, categories, cards)
-- [ ] Games CRUD (list, create, edit, delete)
-- [ ] Categories CRUD (nested under games)
-- [ ] Cards CRUD (searchable table, edit, delete)
-- [ ] Bulk import form (CSV/JSON parsing)
-- [ ] Card preview (dark/light mode toggle)
-- [ ] Error handling + loading states
-- [ ] Test: Admin running on localhost:3001, can CRUD games
+## Phase 4: Admin Back-Office ✓ (Week 3-4)
+- [x] Next.js setup + TypeScript config
+- [x] Auth page (Supabase login)
+- [x] Dashboard overview (stats: games, categories, cards)
+- [x] Games CRUD (list, create, edit, delete)
+- [x] Categories CRUD (nested under games)
+- [x] Cards CRUD (searchable table, edit, delete)
+- [x] Bulk import form (CSV/JSON parsing)
+- [x] Card preview (dark/light mode toggle)
+- [x] Error handling + loading states
+- [x] Emoji picker for category icons
+- [x] Test: Admin running on localhost:3001, can CRUD games
 
 ## Phase 5: Integration & Testing (Week 4-5)
 - [ ] App fetches from API on launch

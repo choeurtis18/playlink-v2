@@ -9,6 +9,10 @@ const lilitaOne = Lilita_One({ subsets: ['latin'], weight: '400', variable: '--f
 export const metadata: Metadata = {
   title: 'Playlink',
   description: 'Jeux de cartes party — Action ou Vérité, Icebreaker & plus',
+  icons: {
+    icon: '/playlink-logo.svg',
+    apple: '/playlink-logo.svg',
+  },
   appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'Playlink' },
   manifest: '/manifest.json',
 };

@@ -32,7 +32,7 @@ export function PlayCard({
   return (
     <div className="relative flex flex-col h-full">
       {/* Card area */}
-      <div className="relative flex-1 flex flex-col items-center justify-center px-4 py-8">
+      <div className="relative flex-1 flex flex-col items-center justify-center px-4 pb-8">
         <AnimatePresence initial={false} custom={direction} mode="wait">
           {finished ? (
             <motion.div
@@ -100,7 +100,7 @@ export function PlayCard({
                 <div
                   className="h-1.5"
                   style={{
-                    background: `linear-gradient(90deg, ${game.colorSecondary}, ${game.colorSecondary})`,
+                    background: `${game.colorSecondary}`,
                     boxShadow: `${game.colorMain}60 0px 2px 12px`,
                   }}
                 />

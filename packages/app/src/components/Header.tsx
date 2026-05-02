@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, WifiOff } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
-import Image from 'next/image';
 
 interface HeaderProps {
   title?: string;
@@ -30,7 +29,7 @@ export function Header({ title, showBack, onBack, gameIcon, colorMain, colorSeco
         { background: `linear-gradient(130deg, ${colorMain}, ${colorSecondary})` }}
     >
       <div className="flex items-center justify-between gap-4">
-        <div className="w-16">
+        <div className="flex items-center gap-2">
           {showBack && (
             <button
               onClick={handleBack}
@@ -39,6 +38,12 @@ export function Header({ title, showBack, onBack, gameIcon, colorMain, colorSeco
             >
               <ArrowLeft size={20} className="text-white" />
             </button>
+          )}
+          {!title && (
+            <div className="flex items-center gap-2">
+              <img src="/playlink-logo.svg" alt="Playlink" width={32} height={32} />
+              <span className="text-lg font-black text-white">Playlink</span>
+            </div>
           )}
         </div>
 
@@ -55,7 +60,7 @@ export function Header({ title, showBack, onBack, gameIcon, colorMain, colorSeco
           </div>
         )}
 
-        <div className="w-16 flex justify-end">
+        <div className="flex items-center gap-2 justify-end">
           {counter && (
             <p className="text-lg text-white">{counter}</p>
           )}

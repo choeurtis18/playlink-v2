@@ -73,7 +73,7 @@ export default function GamePage({ params }: PageProps) {
         subtitle={activeCategory?.name}
         counter={`${currentIndex + 1} / ${deck.length}`}
       />
-      <div className="flex-1 flex flex-col relative">
+      <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
         <div className="absolute bottom-0 right-0 text-[200px] opacity-5 pointer-events-none leading-none">
           {game.icon}
         </div>
