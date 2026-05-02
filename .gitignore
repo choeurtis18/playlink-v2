@@ -1,0 +1,15 @@
+node_modules/
+.pnpm-debug.log
+*.log
+.env
+.env.local
+.env.*.local
+dist/
+build/
+.next/
+.turbo/
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
