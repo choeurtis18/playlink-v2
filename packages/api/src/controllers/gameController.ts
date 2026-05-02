@@ -4,7 +4,6 @@ import { createError } from '../middleware/errorHandler.js';
 
 const gameInclude = {
   categories: {
-    where: { },
     orderBy: { order: 'asc' as const },
     include: {
       cards: {

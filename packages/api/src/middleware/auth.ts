@@ -16,13 +16,19 @@ export async function requireAuth(req: Request, _res: Response, next: NextFuncti
 
   const token = authHeader.slice(7);
 
-  const { data, error } = await supabase.auth.getUser(token);
+  let data: Awaited<ReturnType<typeof supabase.auth.getUser>>['data'];
+  let error: Awaited<ReturnType<typeof supabase.auth.getUser>>['error'];
+
+  try {
+    ({ data, error } = await supabase.auth.getUser(token));
+  } catch {
+    return next(createError('Authentication service unavailable', 503, 'AUTH_UNAVAILABLE'));
+  }
 
   if (error || !data.user) {
     return next(createError('Invalid or expired token', 401, 'UNAUTHORIZED'));
   }
 
-  // Attach user to request for downstream use
-  (req as Request & { user: typeof data.user }).user = data.user;
+  req.user = data.user;
   next();
 }

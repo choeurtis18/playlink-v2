@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { z } from 'zod';
 import { prisma } from '../db/prisma.js';
 import { createError } from '../middleware/errorHandler.js';
 import {
@@ -9,6 +10,17 @@ import {
   CreateCardSchema,
   UpdateCardSchema,
 } from '@playlink/shared';
+
+const BulkImportSchema = z.object({
+  categoryId: z.string().min(1),
+  cards: z.array(
+    z.object({
+      text: z.string().min(1).max(500),
+      difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+      tags: z.array(z.string()).optional(),
+    }),
+  ).min(1),
+});
 
 // ── Games ────────────────────────────────────────────────────────────────────
 
@@ -147,14 +159,17 @@ export async function adminDeleteCard(req: Request, res: Response, next: NextFun
 
 export async function adminBulkImport(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { categoryId, cards } = req.body as { categoryId: string; cards: { text: string; difficulty?: string; tags?: string[] }[] };
-
-    if (!categoryId || !Array.isArray(cards) || cards.length === 0) {
-      return next(createError('categoryId and non-empty cards array required', 400));
-    }
+    const { categoryId, cards } = BulkImportSchema.parse(req.body);
 
     const category = await prisma.category.findUnique({ where: { id: categoryId } });
     if (!category) return next(createError('Category not found', 404));
+
+    // Continue order after existing cards in this category
+    const maxOrderResult = await prisma.card.aggregate({
+      where: { categoryId },
+      _max: { order: true },
+    });
+    const startOrder = (maxOrderResult._max.order ?? -1) + 1;
 
     const created = await prisma.card.createMany({
       data: cards.map((c, i) => ({
@@ -162,7 +177,7 @@ export async function adminBulkImport(req: Request, res: Response, next: NextFun
         text: c.text,
         difficulty: c.difficulty,
         tags: c.tags ?? [],
-        order: i,
+        order: startOrder + i,
       })),
     });
 
