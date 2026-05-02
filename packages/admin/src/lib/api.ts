@@ -1,8 +1,14 @@
 import axios from 'axios';
 import { supabase } from '@/lib/supabase';
 
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+if (!apiUrl) {
+  throw new Error('NEXT_PUBLIC_API_URL environment variable is not defined');
+}
+
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002',
+  baseURL: apiUrl,
 });
 
 api.interceptors.request.use(async (config) => {
@@ -20,7 +26,7 @@ export function apiError(err: unknown): string {
 export async function downloadCSV(url: string, filename: string): Promise<void> {
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002'}${url}`, {
+  const res = await fetch(`${apiUrl}${url}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
   if (!res.ok) throw new Error('Export échoué');

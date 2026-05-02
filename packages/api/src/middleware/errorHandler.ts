@@ -45,7 +45,7 @@ export function errorHandler(
 
   res.status(statusCode).json({
     success: false,
-    error: { message, code: (err as AppError).code },
+    error: { message, code: (err as AppError).code ?? 'UNKNOWN_ERROR' },
   });
 }
 

@@ -293,6 +293,12 @@ const seedData = [
 ];
 
 async function main() {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'Seeding is disabled in production. Use "prisma migrate deploy" instead.'
+    );
+  }
+
   console.log("Seeding database...");
 
   await prisma.card.deleteMany();

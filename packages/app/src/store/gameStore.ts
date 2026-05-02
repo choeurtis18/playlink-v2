@@ -3,7 +3,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3002';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+if (!API_URL) {
+  throw new Error('NEXT_PUBLIC_API_URL environment variable is not defined');
+}
 
 export interface ExportCard {
   id: string;
