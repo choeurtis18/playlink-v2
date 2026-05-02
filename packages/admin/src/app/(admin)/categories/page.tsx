@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Pencil, Trash2, Download, Upload } from 'lucide-react';
-import { api, downloadCSV } from '@/lib/api';
+import { api, apiError, downloadCSV } from '@/lib/api';
 import { Modal } from '@/components/Modal';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { Pagination } from '@/components/Pagination';
@@ -66,6 +66,8 @@ export default function CategoriesPage() {
       await api.delete(`/api/admin/categories/${deleteId}`);
       setDeleteId(null);
       invalidate();
+    } catch (err) {
+      setError(apiError(err));
     } finally {
       setDeleting(false);
     }
@@ -76,7 +78,11 @@ export default function CategoriesPage() {
     try {
       const params = filterGameId ? `?gameId=${filterGameId}` : '';
       await downloadCSV(`/api/admin/categories/export${params}`, 'categories.csv');
-    } finally { setExporting(false); }
+    } catch (err) {
+      setError(apiError(err));
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleSuccess = () => {

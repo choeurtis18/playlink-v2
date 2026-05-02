@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Pencil, Trash2, Upload, Download, Search } from 'lucide-react';
-import { api, downloadCSV } from '@/lib/api';
+import { api, apiError, downloadCSV } from '@/lib/api';
 import { Modal } from '@/components/Modal';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { Pagination } from '@/components/Pagination';
@@ -87,6 +87,8 @@ export default function CardsPage() {
       await api.delete(`/api/admin/cards/${deleteId}`);
       setDeleteId(null);
       invalidate();
+    } catch (err) {
+      setError(apiError(err));
     } finally {
       setDeleting(false);
     }
@@ -101,7 +103,11 @@ export default function CardsPage() {
       if (search) params.set('search', search);
       const qs = params.toString();
       await downloadCSV(`/api/admin/cards/export${qs ? `?${qs}` : ''}`, 'cards.csv');
-    } finally { setExporting(false); }
+    } catch (err) {
+      setError(apiError(err));
+    } finally {
+      setExporting(false);
+    }
   };
 
   const handleSuccess = () => {
