@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm --filter @playlink/shared run build && pnpm --filter @playlink/api run build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "outputDirectory": "dist"
+}
