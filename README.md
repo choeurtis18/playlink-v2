@@ -13,14 +13,13 @@ Playlink is an offline-first web app for social card games designed for 16-35 ye
 
 ## Project Structure
 
-pnpm monorepo with 4 packages:
+pnpm monorepo with 3 packages:
 
 ```
 playlink-v2/
 ├── packages/
 │   ├── shared/     # @playlink/shared — Zod schemas, constants, shared types
-│   ├── api/        # @playlink/api — Express + Prisma REST API (port 3002)
-│   ├── app/        # @playlink/app — Next.js 14 user app (port 3000)
+│   ├── app/        # @playlink/app — Next.js 14 user app + API Routes (port 3000)
 │   └── admin/      # @playlink/admin — Next.js 14 admin panel (port 3001)
 ├── .claude/        # Project memory and context for Claude Code
 └── pnpm-workspace.yaml
@@ -38,32 +37,28 @@ playlink-v2/
 
 ```bash
 pnpm install
+# Automatically runs prisma generate for packages/app
 ```
 
 ### Environment variables
 
-Each package has a `.env.example`. Copy and fill in:
-
 ```bash
-# packages/api
-cp packages/api/.env.example packages/api/.env
+# packages/app — API + user app
+cp packages/app/.env.example packages/app/.env.local
 # DATABASE_URL — Supabase PostgreSQL connection string
-# SUPABASE_URL, SUPABASE_SERVICE_KEY — for JWT verification
+# SUPABASE_URL, SUPABASE_SERVICE_KEY — for JWT verification (server-side)
+# NEXT_PUBLIC_API_URL — leave empty in production (same domain), set to http://localhost:3000 in dev
 
 # packages/admin
 cp packages/admin/.env.example packages/admin/.env.local
 # NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
-# NEXT_PUBLIC_API_URL=http://localhost:3002
-
-# packages/app
-cp packages/app/.env.example packages/app/.env.local
-# NEXT_PUBLIC_API_URL=http://localhost:3002
+# NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
 ### Database setup
 
 ```bash
-cd packages/api
+cd packages/app
 pnpm exec prisma generate     # Generate Prisma client
 pnpm exec prisma db push      # Push schema to database
 pnpm exec prisma db seed      # Seed: 4 games, 150+ cards
@@ -73,9 +68,8 @@ pnpm exec prisma db seed      # Seed: 4 games, 150+ cards
 
 ```bash
 pnpm dev
-# App:   http://localhost:3000
-# Admin: http://localhost:3001
-# API:   http://localhost:3002
+# App + API: http://localhost:3000
+# Admin:     http://localhost:3001
 ```
 
 ## Commands
@@ -92,8 +86,8 @@ pnpm dev
 | Layer | Tech |
 |-------|------|
 | User app | Next.js 14, Tailwind CSS, Zustand, Framer Motion |
-| Admin panel | Next.js 14, Tailwind CSS, Zustand |
-| API | Express, Prisma ORM, Zod |
+| Admin panel | Next.js 14, Tailwind CSS, Supabase Auth |
+| API | Next.js API Routes, Prisma ORM, Zod |
 | Database | PostgreSQL via Supabase |
 | Auth | Supabase Auth (JWT) — admin only |
 | Shared | TypeScript, Zod schemas, tsup |
@@ -101,11 +95,15 @@ pnpm dev
 
 ## API Overview
 
+All API Routes live in `packages/app/src/app/api/`.
+
 ### Public
 
 | Method | Route | Description |
 |--------|-------|-------------|
+| GET | `/api/health` | Health check |
 | GET | `/api/games` | List active games |
+| GET | `/api/games/:id` | Single game by slug |
 | GET | `/api/cards/export` | Full export for offline cache |
 
 ### Admin (Bearer JWT required)
@@ -135,12 +133,12 @@ All three tables support CSV export and transactional upsert import.
 - Import: row with existing `id` → update; empty or unknown `id` → create
 - On any validation error, the entire import is rolled back
 - Tags in cards CSV use `|` as separator (e.g. `mensonge|famille`)
-- A template CSV (headers + sample row) can be downloaded from each import modal
+- Auto-detects `,` vs `;` separator (Excel French locale uses `;`)
 
 ## How It Works
 
 1. **Admin** manages content via the admin panel (CRUD + CSV import)
-2. **API** stores content in PostgreSQL via Prisma
+2. **API Routes** store content in PostgreSQL via Prisma
 3. **App** fetches all content on launch via `GET /api/cards/export`
 4. Content is cached in localStorage (Zustand persist)
 5. Users play offline — no network needed during gameplay
@@ -149,9 +147,8 @@ All three tables support CSV export and transactional upsert import.
 
 | Service | Platform | URL |
 |---------|----------|-----|
-| User app | Vercel | playlink.app |
+| User app + API | Vercel | playlink.app |
 | Admin panel | Vercel | admin.playlink.app |
-| API | Render / Railway | api.playlink.app |
 | Database | Supabase | — |
 
 ## License

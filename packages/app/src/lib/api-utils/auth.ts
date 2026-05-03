@@ -2,16 +2,12 @@ import { type NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { createError } from './error-handler';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
-
-if (!supabaseUrl || !supabaseServiceKey) {
-  throw new Error(
-    `Supabase configuration missing: URL=${!!supabaseUrl}, SERVICE_KEY=${!!supabaseServiceKey}`
-  );
+function getSupabaseClient() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) throw createError('Supabase configuration missing', 503, 'CONFIG_ERROR');
+  return createClient(url, key);
 }
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function requireAuth(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
@@ -22,6 +18,7 @@ export async function requireAuth(request: NextRequest) {
 
   const token = authHeader.slice(7);
 
+  const supabase = getSupabaseClient();
   let data: Awaited<ReturnType<typeof supabase.auth.getUser>>['data'];
   let error: Awaited<ReturnType<typeof supabase.auth.getUser>>['error'];
 
