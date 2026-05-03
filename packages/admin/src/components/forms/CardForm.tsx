@@ -20,6 +20,7 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
   );
   const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [categoryId, setCategoryId] = useState(card?.categoryId ?? defaultCategoryId ?? '');
+  const [initializedWithDefault, setInitializedWithDefault] = useState(!!defaultCategoryId);
   const [text, setText] = useState(card?.text ?? '');
   const [difficulty, setDifficulty] = useState<string>(card?.difficulty ?? '');
   const [tags, setTags] = useState(card?.tags.join(', ') ?? '');
@@ -33,10 +34,10 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
     api.get<{ data: AdminCategory[] }>(`/api/admin/categories?gameId=${selectedGameId}&limit=100`)
       .then((res) => {
         setCategories(res.data.data);
-        if (!isEdit && !defaultCategoryId) setCategoryId(res.data.data[0]?.id ?? '');
+        if (!isEdit && !initializedWithDefault) setCategoryId(res.data.data[0]?.id ?? '');
       })
       .catch(() => {});
-  }, [selectedGameId, isEdit, defaultCategoryId]);
+  }, [selectedGameId, isEdit, initializedWithDefault]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

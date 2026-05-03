@@ -203,7 +203,7 @@ export default function CategoriesPage() {
 
       {(showCreate || editCategory) && (
         <Modal title={editCategory ? `Modifier — ${editCategory.name}` : 'Nouvelle catégorie'} onClose={() => { setShowCreate(false); setEditCategory(null); }}>
-          <CategoryForm games={games} category={editCategory ?? undefined} defaultGameId={filterGameId} onSuccess={handleSuccess} onCancel={() => { setShowCreate(false); setEditCategory(null); }} />
+          <CategoryForm games={games} category={editCategory ?? undefined} defaultGameId={filterGameId || undefined} onSuccess={handleSuccess} onCancel={() => { setShowCreate(false); setEditCategory(null); }} />
         </Modal>
       )}
 

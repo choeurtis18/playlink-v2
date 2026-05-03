@@ -280,7 +280,7 @@ export default function CardsPage() {
 
       {(showCreate || editCard) && (
         <Modal title={editCard ? 'Modifier la carte' : 'Nouvelle carte'} onClose={() => { setShowCreate(false); setEditCard(null); }} size="lg">
-          <CardForm games={games} card={editCard ?? undefined} defaultCategoryId={filterCategoryId} onSuccess={handleSuccess} onCancel={() => { setShowCreate(false); setEditCard(null); }} />
+          <CardForm games={games} card={editCard ?? undefined} defaultCategoryId={filterCategoryId || undefined} onSuccess={handleSuccess} onCancel={() => { setShowCreate(false); setEditCard(null); }} />
         </Modal>
       )}
 
