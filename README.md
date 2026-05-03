@@ -127,13 +127,22 @@ All API Routes live in `packages/app/src/app/api/`.
 
 ## CSV Import/Export
 
-All three tables support CSV export and transactional upsert import.
+All three tables support CSV export and upsert import.
 
 - Export respects active filters (gameId, categoryId, search)
 - Import: row with existing `id` → update; empty or unknown `id` → create
-- On any validation error, the entire import is rolled back
+- Validation errors are logged per row (no rollback — tolerates partial imports)
 - Tags in cards CSV use `|` as separator (e.g. `mensonge|famille`)
 - Auto-detects `,` vs `;` separator (Excel French locale uses `;`)
+- Bulk import via text mode: paste raw card text (one per line) with category + difficulty
+
+## Admin Features
+
+- **Multi-select deletion**: Select multiple rows with checkboxes, delete in bulk
+- **Real-time filtering**: Filter games by category (cards), filter cards by game + category + search
+- **Pagination**: 10 games, 15 categories, 20 cards per page
+- **Form pre-selection**: When adding under a filter, the form pre-selects the filtered value
+- **CSV import/export**: Full data portability for games, categories, and cards
 
 ## How It Works
 
@@ -149,7 +158,12 @@ All three tables support CSV export and transactional upsert import.
 |---------|----------|-----|
 | User app + API | Vercel | playlink.app |
 | Admin panel | Vercel | admin.playlink.app |
-| Database | Supabase | — |
+| Database | Supabase (PostgreSQL) | — |
+
+All three packages (app, admin, shared) are deployed in a single Vercel project.
+- `packages/app` → builds to `/` (user app) + `/api/*` (API routes)
+- `packages/admin` → separate Vercel project (admin.playlink.app)
+- Database connection: Supabase PgBouncer on port 6543 (transaction mode) with connection pooling
 
 ## License
 
