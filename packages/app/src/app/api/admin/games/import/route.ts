@@ -77,20 +77,22 @@ export async function POST(request: NextRequest) {
 
     if (errors.length) throw createError(errors.join('\n'), 422);
 
-    const result = await prisma.$transaction(async (tx) => {
-      let created = 0; let updated = 0;
-      for (const { id, data } of upserts) {
+    let created = 0; let updated = 0;
+    for (const { id, data } of upserts) {
+      try {
         if (id) {
-          const exists = await tx.game.findUnique({ where: { id } });
-          if (exists) { await tx.game.update({ where: { id }, data }); updated++; }
-          else { await tx.game.create({ data: { ...data, id } }); created++; }
+          const exists = await prisma.game.findUnique({ where: { id } });
+          if (exists) { await prisma.game.update({ where: { id }, data }); updated++; }
+          else { await prisma.game.create({ data: { ...data, id } }); created++; }
         } else {
-          await tx.game.create({ data: data as Prisma.GameUncheckedCreateInput });
+          await prisma.game.create({ data: data as Prisma.GameUncheckedCreateInput });
           created++;
         }
+      } catch (e) {
+        console.error(`Failed to upsert game: ${id || data.name}`, e);
       }
-      return { created, updated };
-    });
+    }
+    const result = { created, updated };
 
     return NextResponse.json({ success: true, data: result });
   } catch (err) {

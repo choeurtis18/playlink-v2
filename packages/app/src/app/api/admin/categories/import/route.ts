@@ -81,20 +81,22 @@ export async function POST(request: NextRequest) {
     const badGameIds = gameIds.filter((id) => !existingGameIds.has(id));
     if (badGameIds.length) throw createError(`gameId inconnu(s) : ${badGameIds.join(', ')}`, 422);
 
-    const result = await prisma.$transaction(async (tx) => {
-      let created = 0; let updated = 0;
-      for (const { id, data } of upserts) {
+    let created = 0; let updated = 0;
+    for (const { id, data } of upserts) {
+      try {
         if (id) {
-          const exists = await tx.category.findUnique({ where: { id } });
-          if (exists) { await tx.category.update({ where: { id }, data }); updated++; }
-          else { await tx.category.create({ data: { ...data, id } }); created++; }
+          const exists = await prisma.category.findUnique({ where: { id } });
+          if (exists) { await prisma.category.update({ where: { id }, data }); updated++; }
+          else { await prisma.category.create({ data: { ...data, id } }); created++; }
         } else {
-          await tx.category.create({ data: data as Prisma.CategoryUncheckedCreateInput });
+          await prisma.category.create({ data: data as Prisma.CategoryUncheckedCreateInput });
           created++;
         }
+      } catch (e) {
+        console.error(`Failed to upsert category: ${id || data.name}`, e);
       }
-      return { created, updated };
-    });
+    }
+    const result = { created, updated };
 
     return NextResponse.json({ success: true, data: result });
   } catch (err) {

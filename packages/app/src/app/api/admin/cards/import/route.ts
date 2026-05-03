@@ -82,20 +82,22 @@ export async function POST(request: NextRequest) {
     const badCatIds = categoryIds.filter((id) => !existingCatIds.has(id));
     if (badCatIds.length) throw createError(`categoryId inconnu(s) : ${badCatIds.join(', ')}`, 422);
 
-    const result = await prisma.$transaction(async (tx) => {
-      let created = 0; let updated = 0;
-      for (const { id, data } of upserts) {
+    let created = 0; let updated = 0;
+    for (const { id, data } of upserts) {
+      try {
         if (id) {
-          const exists = await tx.card.findUnique({ where: { id } });
-          if (exists) { await tx.card.update({ where: { id }, data }); updated++; }
-          else { await tx.card.create({ data: { ...data, id } }); created++; }
+          const exists = await prisma.card.findUnique({ where: { id } });
+          if (exists) { await prisma.card.update({ where: { id }, data }); updated++; }
+          else { await prisma.card.create({ data: { ...data, id } }); created++; }
         } else {
-          await tx.card.create({ data: data as Prisma.CardUncheckedCreateInput });
+          await prisma.card.create({ data: data as Prisma.CardUncheckedCreateInput });
           created++;
         }
+      } catch (e) {
+        console.error(`Failed to upsert card: ${id || data.text}`, e);
       }
-      return { created, updated };
-    });
+    }
+    const result = { created, updated };
 
     return NextResponse.json({ success: true, data: result });
   } catch (err) {
