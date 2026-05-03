@@ -27,6 +27,8 @@ export default function CategoriesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deletingBulk, setDeletingBulk] = useState(false);
 
   useEffect(() => {
     api.get<{ data: AdminGame[] }>('/api/admin/games?limit=100')
@@ -43,6 +45,7 @@ export default function CategoriesPage() {
       const res = await api.get<{ data: AdminCategory[]; pagination: PaginationMeta }>(`/api/admin/categories?${params}`);
       setCategories(res.data.data);
       setPagination(res.data.pagination);
+      setSelectedIds(new Set());
     } catch {
       setError('Impossible de charger les catégories.');
     } finally {
@@ -52,12 +55,19 @@ export default function CategoriesPage() {
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
 
-  const handleFilterChange = (gameId: string) => {
-    setFilterGameId(gameId);
-    setPage(1);
+  const handleFilterChange = (gameId: string) => { setFilterGameId(gameId); setPage(1); };
+  const invalidate = () => setRefresh((n) => n + 1);
+
+  const toggleSelect = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedIds(next);
   };
 
-  const invalidate = () => setRefresh((n) => n + 1);
+  const toggleSelectAll = () => {
+    if (selectedIds.size === categories.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(categories.map((c) => c.id)));
+  };
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -73,6 +83,23 @@ export default function CategoriesPage() {
     }
   };
 
+  const handleDeleteBulk = async () => {
+    if (selectedIds.size === 0) return;
+    setDeletingBulk(true);
+    try {
+      for (const id of selectedIds) {
+        try { await api.delete(`/api/admin/categories/${id}`); }
+        catch (e) { console.error(`Failed to delete category ${id}`, e); }
+      }
+      invalidate();
+    } catch (err) {
+      setError(apiError(err));
+    } finally {
+      setDeletingBulk(false);
+      setSelectedIds(new Set());
+    }
+  };
+
   const handleExport = async () => {
     setExporting(true);
     try {
@@ -85,17 +112,8 @@ export default function CategoriesPage() {
     }
   };
 
-  const handleSuccess = () => {
-    setShowCreate(false);
-    setEditCategory(null);
-    invalidate();
-  };
-
-  const handleImportSuccess = () => {
-    setShowImport(false);
-    invalidate();
-  };
-
+  const handleSuccess = () => { setShowCreate(false); setEditCategory(null); invalidate(); };
+  const handleImportSuccess = () => { setShowImport(false); invalidate(); };
   const gameName = (gameId: string) => games.find((g) => g.id === gameId)?.name ?? '—';
 
   return (
@@ -106,6 +124,11 @@ export default function CategoriesPage() {
           <p className="text-sm text-gray-500 mt-0.5">{pagination.total} catégorie{pagination.total !== 1 ? 's' : ''}</p>
         </div>
         <div className="flex items-center gap-3">
+          {selectedIds.size > 0 && (
+            <button onClick={handleDeleteBulk} disabled={deletingBulk} className="btn-danger flex items-center gap-2">
+              <Trash2 size={15} /> Supprimer {selectedIds.size}
+            </button>
+          )}
           <select value={filterGameId} onChange={(e) => handleFilterChange(e.target.value)} className="input w-48">
             <option value="">Tous les jeux</option>
             {games.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
@@ -128,6 +151,9 @@ export default function CategoriesPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left">
+              <th className="px-4 py-3 font-medium text-gray-600 w-8">
+                <input type="checkbox" checked={selectedIds.size === categories.length && categories.length > 0} onChange={toggleSelectAll} className="rounded" />
+              </th>
               <th className="px-4 py-3 font-medium text-gray-600">Jeu</th>
               <th className="px-4 py-3 font-medium text-gray-600">Nom</th>
               <th className="px-4 py-3 font-medium text-gray-600">Slug</th>
@@ -139,12 +165,15 @@ export default function CategoriesPage() {
           </thead>
           <tbody className="divide-y divide-gray-50">
             {loading ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
             ) : categories.length === 0 ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Aucune catégorie trouvée.</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">Aucune catégorie trouvée.</td></tr>
             ) : (
               categories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={cat.id} className={`hover:bg-gray-50 transition-colors ${selectedIds.has(cat.id) ? 'bg-blue-50' : ''}`}>
+                  <td className="px-4 py-3">
+                    <input type="checkbox" checked={selectedIds.has(cat.id)} onChange={() => toggleSelect(cat.id)} className="rounded" />
+                  </td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{gameName(cat.gameId)}</td>
                   <td className="px-4 py-3 font-medium">{cat.name}</td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-500">{cat.slug}</td>

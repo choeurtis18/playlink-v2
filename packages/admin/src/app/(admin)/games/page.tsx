@@ -25,6 +25,8 @@ export default function GamesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deletingBulk, setDeletingBulk] = useState(false);
 
   const fetchGames = useCallback(async () => {
     setLoading(true);
@@ -35,6 +37,7 @@ export default function GamesPage() {
       );
       setGames(res.data.data);
       setPagination(res.data.pagination);
+      setSelectedIds(new Set());
     } catch {
       setError('Impossible de charger les jeux.');
     } finally {
@@ -45,6 +48,17 @@ export default function GamesPage() {
   useEffect(() => { fetchGames(); }, [fetchGames]);
 
   const invalidate = () => setRefresh((n) => n + 1);
+
+  const toggleSelect = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setSelectedIds(next);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === games.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(games.map((g) => g.id)));
+  };
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -57,6 +71,23 @@ export default function GamesPage() {
       setError(apiError(err));
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleDeleteBulk = async () => {
+    if (selectedIds.size === 0) return;
+    setDeletingBulk(true);
+    try {
+      for (const id of selectedIds) {
+        try { await api.delete(`/api/admin/games/${id}`); }
+        catch (e) { console.error(`Failed to delete game ${id}`, e); }
+      }
+      invalidate();
+    } catch (err) {
+      setError(apiError(err));
+    } finally {
+      setDeletingBulk(false);
+      setSelectedIds(new Set());
     }
   };
 
@@ -90,6 +121,11 @@ export default function GamesPage() {
           <p className="text-sm text-gray-500 mt-0.5">{pagination.total} jeu{pagination.total !== 1 ? 'x' : ''}</p>
         </div>
         <div className="flex items-center gap-2">
+          {selectedIds.size > 0 && (
+            <button onClick={handleDeleteBulk} disabled={deletingBulk} className="btn-danger flex items-center gap-2">
+              <Trash2 size={15} /> Supprimer {selectedIds.size}
+            </button>
+          )}
           <button onClick={handleExport} disabled={exporting} className="btn-secondary flex items-center gap-2">
             <Download size={15} /> {exporting ? 'Export…' : 'Exporter CSV'}
           </button>
@@ -108,6 +144,9 @@ export default function GamesPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left">
+              <th className="px-4 py-3 font-medium text-gray-600 w-8">
+                <input type="checkbox" checked={selectedIds.size === games.length && games.length > 0} onChange={toggleSelectAll} className="rounded" />
+              </th>
               <th className="px-4 py-3 font-medium text-gray-600 w-10">Icône</th>
               <th className="px-4 py-3 font-medium text-gray-600">Nom</th>
               <th className="px-4 py-3 font-medium text-gray-600">Slug</th>
@@ -119,12 +158,15 @@ export default function GamesPage() {
           </thead>
           <tbody className="divide-y divide-gray-50">
             {loading ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
             ) : games.length === 0 ? (
-              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Aucun jeu trouvé.</td></tr>
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">Aucun jeu trouvé.</td></tr>
             ) : (
               games.map((game) => (
-                <tr key={game.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={game.id} className={`hover:bg-gray-50 transition-colors ${selectedIds.has(game.id) ? 'bg-blue-50' : ''}`}>
+                  <td className="px-4 py-3">
+                    <input type="checkbox" checked={selectedIds.has(game.id)} onChange={() => toggleSelect(game.id)} className="rounded" />
+                  </td>
                   <td className="px-4 py-3 text-xl">{game.icon ?? '🎲'}</td>
                   <td className="px-4 py-3 font-medium">{game.name}</td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-500">{game.slug}</td>

@@ -39,6 +39,8 @@ export default function CardsPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deletingBulk, setDeletingBulk] = useState(false);
 
   useEffect(() => {
     api.get<{ data: AdminGame[] }>('/api/admin/games?limit=100').then((r) => setGames(r.data.data)).catch(() => {});
@@ -62,6 +64,7 @@ export default function CardsPage() {
       const res = await api.get<{ data: AdminCard[]; pagination: PaginationMeta }>(`/api/admin/cards?${params}`);
       setCards(res.data.data);
       setPagination(res.data.pagination);
+      setSelectedIds(new Set());
     } catch {
       setError('Impossible de charger les cartes.');
     } finally {
@@ -80,6 +83,18 @@ export default function CardsPage() {
 
   const invalidate = () => setRefresh((n) => n + 1);
 
+  const toggleSelect = (id: string) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) newSelected.delete(id);
+    else newSelected.add(id);
+    setSelectedIds(newSelected);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === cards.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(cards.map((c) => c.id)));
+  };
+
   const handleDelete = async () => {
     if (!deleteId) return;
     setDeleting(true);
@@ -91,6 +106,29 @@ export default function CardsPage() {
       setError(apiError(err));
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleDeleteBulk = async () => {
+    if (selectedIds.size === 0) return;
+    setDeletingBulk(true);
+    let deleted = 0;
+    try {
+      for (const id of selectedIds) {
+        try {
+          await api.delete(`/api/admin/cards/${id}`);
+          deleted++;
+        } catch (e) {
+          console.error(`Failed to delete card ${id}`, e);
+        }
+      }
+      setError(null);
+      invalidate();
+    } catch (err) {
+      setError(apiError(err));
+    } finally {
+      setDeletingBulk(false);
+      setSelectedIds(new Set());
     }
   };
 
@@ -130,6 +168,11 @@ export default function CardsPage() {
           <p className="text-sm text-gray-500 mt-0.5">{pagination.total} carte{pagination.total !== 1 ? 's' : ''}</p>
         </div>
         <div className="flex items-center gap-2">
+          {selectedIds.size > 0 && (
+            <button onClick={handleDeleteBulk} disabled={deletingBulk} className="btn-danger flex items-center gap-2">
+              <Trash2 size={15} /> Supprimer {selectedIds.size}
+            </button>
+          )}
           <button onClick={handleExport} disabled={exporting} className="btn-secondary flex items-center gap-2">
             <Download size={15} /> {exporting ? 'Export…' : 'Exporter CSV'}
           </button>
@@ -166,6 +209,9 @@ export default function CardsPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left">
+              <th className="px-4 py-3 font-medium text-gray-600 w-8">
+                <input type="checkbox" checked={selectedIds.size === cards.length && cards.length > 0} onChange={toggleSelectAll} className="rounded" />
+              </th>
               <th className="px-4 py-3 font-medium text-gray-600">Catégorie</th>
               <th className="px-4 py-3 font-medium text-gray-600">Texte</th>
               <th className="px-4 py-3 font-medium text-gray-600">Difficulté</th>
@@ -176,12 +222,15 @@ export default function CardsPage() {
           </thead>
           <tbody className="divide-y divide-gray-50">
             {loading ? (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
+              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Chargement…</td></tr>
             ) : cards.length === 0 ? (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Aucune carte trouvée.</td></tr>
+              <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Aucune carte trouvée.</td></tr>
             ) : (
               cards.map((card) => (
-                <tr key={card.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={card.id} className={`hover:bg-gray-50 transition-colors ${selectedIds.has(card.id) ? 'bg-blue-50' : ''}`}>
+                  <td className="px-4 py-3">
+                    <input type="checkbox" checked={selectedIds.has(card.id)} onChange={() => toggleSelect(card.id)} className="rounded" />
+                  </td>
                   <td className="px-4 py-3">
                     <p className="font-medium text-xs">{card.category.name}</p>
                     <p className="text-gray-400 text-xs">{card.category.game.name}</p>
