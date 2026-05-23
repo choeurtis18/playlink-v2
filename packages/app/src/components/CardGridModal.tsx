@@ -59,7 +59,7 @@ export function CardGridModal({
 
           {/* Grid container */}
           <div className="flex-1 overflow-y-auto p-4">
-            <div className="grid grid-cols-2 gap-3 pb-4">
+            <div className="grid grid-cols-1 gap-3 pb-4">
               {cards.map((card, index) => (
                 <motion.button
                   key={card.id}
@@ -73,13 +73,13 @@ export function CardGridModal({
                   whileTap={{ scale: 0.95 }}
                   className={`p-3 rounded-lg text-left transition-all ${
                     index === currentIndex
-                      ? 'ring-2 bg-white/10'
-                      : 'bg-white/5 hover:bg-white/10'
+                      ? 'bg-white/60'
+                      : 'bg-white/20 hover:bg-white/10'
                   }`}
                   style={
                     index === currentIndex
                       ? {
-                          ringColor: gameColors.colorMain,
+                          border: `2px solid ${gameColors.colorMain}`,
                           boxShadow: `0 0 16px ${gameColors.colorMain}40`,
                         }
                       : {}

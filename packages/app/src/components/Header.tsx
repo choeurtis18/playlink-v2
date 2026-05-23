@@ -62,7 +62,7 @@ export function Header({ title, showBack, onBack, colorMain, colorSecondary, sub
           </div>
         )}
 
-        <div className="flex items-center gap-2 justify-end">
+        <div className="flex items-center gap-1 justify-end">
           {onGridClick && counter && (
             <motion.button
               onClick={onGridClick}

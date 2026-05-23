@@ -117,9 +117,7 @@ export function PlayCard({
                   >
                     <span className="text-xs">{category.icon ?? '🎮'}</span>
                     <span
-                      className="text-xs uppercase tracking-widest"
-                      style={{ color: game.colorSecondary }}
-                    >
+                      className="text-xs text-white uppercase tracking-widest">
                       {category.name}
                     </span>
                   </div>
