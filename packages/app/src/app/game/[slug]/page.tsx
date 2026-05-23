@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Header } from '@/components/Header';
 import { CategoryPicker } from '@/components/CategoryPicker';
 import { PlayCard } from '@/components/PlayCard';
 import { PlayFooter } from '@/components/PlayFooter';
+import { CardGridModal } from '@/components/CardGridModal';
 
 interface PageProps {
   params: { slug: string };
@@ -14,6 +15,7 @@ interface PageProps {
 export default function GamePage({ params }: PageProps) {
   const { games, activeCategoryId, deck, currentIndex, next, prev, resetDeck, startDeck } = useGameStore();
   const directionRef = useRef(1);
+  const [showGrid, setShowGrid] = useState(false);
 
   const game = games.find((g) => g.slug === params.slug);
 
@@ -67,11 +69,11 @@ export default function GamePage({ params }: PageProps) {
         title={game.name}
         showBack
         onBack={resetDeck}
-        gameIcon={game.icon}
         colorMain={game.colorMain}
         colorSecondary={game.colorSecondary}
         subtitle={activeCategory?.name}
         counter={`${currentIndex + 1} / ${deck.length}`}
+        onGridClick={() => setShowGrid(true)}
       />
       <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
         <div className="absolute bottom-0 right-0 text-[200px] opacity-5 pointer-events-none leading-none">
@@ -98,6 +100,19 @@ export default function GamePage({ params }: PageProps) {
         onPrev={handlePrev}
         finished={finished}
       />
+
+      {showGrid && (
+        <CardGridModal
+          cards={deck}
+          currentIndex={currentIndex}
+          onSelectCard={(index) => {
+            useGameStore.setState({ currentIndex: index });
+            setShowGrid(false);
+          }}
+          onClose={() => setShowGrid(false)}
+          gameColors={{ colorMain: game.colorMain, colorSecondary: game.colorSecondary }}
+        />
+      )}
     </div>
   );
 }

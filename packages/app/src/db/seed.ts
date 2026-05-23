@@ -1,4 +1,6 @@
-import "dotenv/config";
+import { config } from "dotenv";
+import { resolve } from "path";
+config({ path: resolve(process.cwd(), ".env.local") });
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -16,6 +18,7 @@ const seedData = [
       {
         name: "Vérités légères",
         slug: "verites-legeres",
+        icon: "😄",
         description: "Questions simples pour briser la glace",
         order: 0,
         cards: [
@@ -36,6 +39,7 @@ const seedData = [
       {
         name: "Vérités profondes",
         slug: "verites-profondes",
+        icon: "🔍",
         description: "Questions qui font réfléchir",
         order: 1,
         cards: [
@@ -54,6 +58,7 @@ const seedData = [
       {
         name: "Actions douces",
         slug: "actions-douces",
+        icon: "🎈",
         description: "Défis marrants et sans risque",
         order: 2,
         cards: [
@@ -72,6 +77,7 @@ const seedData = [
       {
         name: "Actions osées",
         slug: "actions-osees",
+        icon: "🔥",
         description: "Pour ceux qui veulent pimenter la soirée",
         order: 3,
         cards: [
@@ -101,6 +107,7 @@ const seedData = [
       {
         name: "Pour se découvrir",
         slug: "se-decouvrir",
+        icon: "👋",
         description: "Questions légères pour apprendre à se connaître",
         order: 0,
         cards: [
@@ -121,6 +128,7 @@ const seedData = [
       {
         name: "Pour aller plus loin",
         slug: "aller-plus-loin",
+        icon: "💬",
         description: "Questions pour des vraies conversations",
         order: 1,
         cards: [
@@ -139,6 +147,7 @@ const seedData = [
       {
         name: "Fun et décalé",
         slug: "fun-decale",
+        icon: "🤪",
         description: "Questions absurdes et hilarantes",
         order: 2,
         cards: [
@@ -170,6 +179,7 @@ const seedData = [
       {
         name: "Société",
         slug: "societe",
+        icon: "🌍",
         description: "Les grands débats de notre époque",
         order: 0,
         cards: [
@@ -188,6 +198,7 @@ const seedData = [
       {
         name: "Perso et Relations",
         slug: "perso-relations",
+        icon: "❤️",
         description: "Les débats du quotidien",
         order: 1,
         cards: [
@@ -206,6 +217,7 @@ const seedData = [
       {
         name: "Absurde mais sérieux",
         slug: "absurde-serieux",
+        icon: "🤔",
         description: "Questions étranges qui révèlent beaucoup",
         order: 2,
         cards: [
@@ -235,6 +247,7 @@ const seedData = [
       {
         name: "Questions légères",
         slug: "questions-legeres",
+        icon: "😜",
         description: "Fun et sans drama",
         order: 0,
         cards: [
@@ -255,6 +268,7 @@ const seedData = [
       {
         name: "Questions cash",
         slug: "questions-cash",
+        icon: "💣",
         description: "Pour les vrais honnêtes",
         order: 1,
         cards: [
@@ -273,6 +287,7 @@ const seedData = [
       {
         name: "Questions profondes",
         slug: "questions-profondes",
+        icon: "🌙",
         description: "Pour se redécouvrir mutuellement",
         order: 2,
         cards: [
@@ -293,12 +308,6 @@ const seedData = [
 ];
 
 async function main() {
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      'Seeding is disabled in production. Use "prisma migrate deploy" instead.'
-    );
-  }
-
   console.log("Seeding database...");
 
   await prisma.card.deleteMany();
