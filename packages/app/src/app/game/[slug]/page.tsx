@@ -1,12 +1,15 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Header } from '@/components/Header';
 import { CategoryPicker } from '@/components/CategoryPicker';
 import { PlayCard } from '@/components/PlayCard';
 import { PlayFooter } from '@/components/PlayFooter';
 import { CardGridModal } from '@/components/CardGridModal';
+import { RulesModal } from '@/components/RulesModal';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 interface PageProps {
   params: { slug: string };
@@ -16,6 +19,15 @@ export default function GamePage({ params }: PageProps) {
   const { games, activeCategoryId, deck, currentIndex, next, prev, resetDeck, startDeck } = useGameStore();
   const directionRef = useRef(1);
   const [showGrid, setShowGrid] = useState(false);
+  const [showRules, setShowRules] = useState(false);
+  const [rules, setRules] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/games/${params.slug}/rules`)
+      .then((res) => res.json())
+      .then((json) => setRules(json?.data?.rules ?? null))
+      .catch(() => {});
+  }, [params.slug]);
 
   const game = games.find((g) => g.slug === params.slug);
 
@@ -33,8 +45,23 @@ export default function GamePage({ params }: PageProps) {
   if (!activeCategoryId) {
     return (
       <div className="flex flex-col min-h-[100dvh]">
-        <Header title={game.name} showBack gameIcon={game.icon} colorMain={game.colorMain} colorSecondary={game.colorSecondary} />
+        <Header
+          title={game.name}
+          showBack
+          gameIcon={game.icon}
+          colorMain={game.colorMain}
+          colorSecondary={game.colorSecondary}
+          subtitle={`${game.categories.length} CATÉGORIE${game.categories.length > 1 ? 'S' : ''}`}
+          onRulesClick={rules ? () => setShowRules(true) : undefined}
+        />
         <CategoryPicker game={game} onSelect={startDeck} />
+        {showRules && rules && (
+          <RulesModal
+            rules={rules}
+            gameColors={{ colorMain: game.colorMain, colorSecondary: game.colorSecondary }}
+            onClose={() => setShowRules(false)}
+          />
+        )}
       </div>
     );
   }
@@ -74,6 +101,7 @@ export default function GamePage({ params }: PageProps) {
         subtitle={activeCategory?.name}
         counter={`${currentIndex + 1} / ${deck.length}`}
         onGridClick={() => setShowGrid(true)}
+        onRulesClick={rules ? () => setShowRules(true) : undefined}
       />
       <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
         <div className="absolute bottom-0 right-0 text-[200px] opacity-5 pointer-events-none leading-none">
@@ -111,6 +139,14 @@ export default function GamePage({ params }: PageProps) {
           }}
           onClose={() => setShowGrid(false)}
           gameColors={{ colorMain: game.colorMain, colorSecondary: game.colorSecondary }}
+        />
+      )}
+
+      {showRules && rules && (
+        <RulesModal
+          rules={rules}
+          gameColors={{ colorMain: game.colorMain, colorSecondary: game.colorSecondary }}
+          onClose={() => setShowRules(false)}
         />
       )}
     </div>

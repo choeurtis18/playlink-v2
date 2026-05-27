@@ -31,8 +31,19 @@ model Game {
   updatedAt      DateTime   @updatedAt
 
   categories Category[]
+  rules      GameRules?
 
   @@map("games")
+}
+
+model GameRules {
+  id        String   @id @default(cuid())
+  gameId    String   @unique
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  rules     String
+  updatedAt DateTime @updatedAt
+
+  @@map("game_rules")
 }
 
 model Category {

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, WifiOff, Grid3X3 } from 'lucide-react';
+import { ArrowLeft, WifiOff, Grid3X3, BookOpen } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 
 interface HeaderProps {
@@ -15,9 +15,10 @@ interface HeaderProps {
   subtitle?: string;
   counter?: string;
   onGridClick?: () => void;
+  onRulesClick?: () => void;
 }
 
-export function Header({ title, showBack, onBack, colorMain, colorSecondary, subtitle, counter, onGridClick }: HeaderProps) {
+export function Header({ title, showBack, onBack, colorMain, colorSecondary, subtitle, counter, onGridClick, onRulesClick }: HeaderProps) {
   const { isOffline } = useGameStore();
   const router = useRouter();
 
@@ -57,12 +58,23 @@ export function Header({ title, showBack, onBack, colorMain, colorSecondary, sub
                 <p className="text-sm text-white/80">{subtitle}</p>
               </>
             ) : (
-              <p className="text-xs text-white/80">{subtitle || '4 CATÉGORIES'}</p>
+              <p className="text-xs text-white/80">{subtitle}</p>
             )}
           </div>
         )}
 
         <div className="flex items-center gap-1 justify-end">
+          {onRulesClick && (
+            <motion.button
+              onClick={onRulesClick}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-full text-white hover:bg-white/10 transition-colors"
+              title="Règles du jeu"
+            >
+              <BookOpen size={20} />
+            </motion.button>
+          )}
           {onGridClick && counter && (
             <motion.button
               onClick={onGridClick}
@@ -73,9 +85,6 @@ export function Header({ title, showBack, onBack, colorMain, colorSecondary, sub
             >
               <Grid3X3 size={20} />
             </motion.button>
-          )}
-          {counter && (
-            <p className="text-lg text-white">{counter}</p>
           )}
           {isOffline && (
             <span title="Mode hors-ligne">
