@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         type: body.type,
         gameId: body.gameId ?? null,
         categoryId: body.categoryId ?? null,
-        metadata: body.metadata ?? undefined,
+        metadata: body.metadata ? (body.metadata as object) : undefined,
       },
     });
     return NextResponse.json({ success: true }, { status: 201 });
