@@ -89,3 +89,17 @@ model AuditLog {
 
   @@map("audit_logs")
 }
+
+model Event {
+  id         String   @id @default(cuid())
+  type       String   // game_started | card_viewed | game_finished
+  gameId     String?
+  categoryId String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([type])
+  @@index([gameId])
+  @@index([createdAt])
+  @@map("events")
+}

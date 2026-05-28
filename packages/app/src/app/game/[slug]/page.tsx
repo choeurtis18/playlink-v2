@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { Header } from '@/components/Header';
 import { CategoryPicker } from '@/components/CategoryPicker';
@@ -8,6 +8,7 @@ import { PlayCard } from '@/components/PlayCard';
 import { PlayFooter } from '@/components/PlayFooter';
 import { CardGridModal } from '@/components/CardGridModal';
 import { RulesModal } from '@/components/RulesModal';
+import { useTracking } from '@/hooks/useTracking';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
@@ -21,6 +22,8 @@ export default function GamePage({ params }: PageProps) {
   const [showGrid, setShowGrid] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [rules, setRules] = useState<string | null>(null);
+  const { track } = useTracking();
+  const trackedStartRef = useRef(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/games/${params.slug}/rules`)
@@ -30,6 +33,13 @@ export default function GamePage({ params }: PageProps) {
   }, [params.slug]);
 
   const game = games.find((g) => g.slug === params.slug);
+
+  const handleStartDeck = useCallback((categoryId: string) => {
+    const g = games.find((g) => g.slug === params.slug);
+    if (g) track('game_started', { gameId: g.id, categoryId });
+    trackedStartRef.current = false;
+    startDeck(categoryId);
+  }, [games, params.slug, track, startDeck]);
 
   if (!game) {
     return (
@@ -54,7 +64,7 @@ export default function GamePage({ params }: PageProps) {
           subtitle={`${game.categories.length} CATÉGORIE${game.categories.length > 1 ? 'S' : ''}`}
           onRulesClick={rules ? () => setShowRules(true) : undefined}
         />
-        <CategoryPicker game={game} onSelect={startDeck} />
+        <CategoryPicker game={game} onSelect={handleStartDeck} />
         {showRules && rules && (
           <RulesModal
             rules={rules}
@@ -78,6 +88,13 @@ export default function GamePage({ params }: PageProps) {
 
   const handleNext = () => {
     directionRef.current = -1;
+    if (!finished) {
+      track('card_viewed', { gameId: game.id, categoryId: activeCategoryId });
+    }
+    if (currentIndex + 1 >= deck.length && !trackedStartRef.current) {
+      trackedStartRef.current = true;
+      track('game_finished', { gameId: game.id, categoryId: activeCategoryId, metadata: { cardsViewed: deck.length } });
+    }
     next();
   };
 
@@ -89,7 +106,7 @@ export default function GamePage({ params }: PageProps) {
   return (
     <div className="flex flex-col min-h-[100dvh]"
      style={{
-      background: `linear-gradient(90deg, ${game.colorMain}, ${game.colorSecondary})`,          
+      background: `linear-gradient(90deg, ${game.colorMain}, ${game.colorSecondary})`,
      }}
     >
       <Header
