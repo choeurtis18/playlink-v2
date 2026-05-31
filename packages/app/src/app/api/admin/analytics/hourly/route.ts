@@ -10,11 +10,11 @@ export async function GET(request: NextRequest) {
 
     const rows = await prisma.$queryRaw<{ hour: number; sessions: number }[]>`
       SELECT
-        EXTRACT(HOUR FROM "createdAt" AT TIME ZONE 'Europe/Paris')::int as hour,
+        EXTRACT(HOUR FROM "createdAt"::timestamptz AT TIME ZONE 'Europe/Paris')::int as hour,
         COUNT(*)::int as sessions
       FROM events
       WHERE type = 'game_started'
-      GROUP BY EXTRACT(HOUR FROM "createdAt" AT TIME ZONE 'Europe/Paris')
+      GROUP BY EXTRACT(HOUR FROM "createdAt"::timestamptz AT TIME ZONE 'Europe/Paris')
       ORDER BY hour ASC
     `;
 

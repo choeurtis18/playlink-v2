@@ -13,12 +13,12 @@ export async function GET(request: NextRequest) {
 
     const rows = await prisma.$queryRaw<{ date: string; sessions: number; cardsViewed: number }[]>`
       SELECT
-        TO_CHAR(DATE("createdAt" AT TIME ZONE 'Europe/Paris'), 'YYYY-MM-DD') as date,
+        TO_CHAR(DATE("createdAt"::timestamptz AT TIME ZONE 'Europe/Paris'), 'YYYY-MM-DD') as date,
         COUNT(*) FILTER (WHERE type = 'game_started')::int as sessions,
         COUNT(*) FILTER (WHERE type = 'card_viewed')::int as "cardsViewed"
       FROM events
       WHERE "createdAt" >= NOW() - INTERVAL '1 day' * ${days}
-      GROUP BY DATE("createdAt" AT TIME ZONE 'Europe/Paris')
+      GROUP BY DATE("createdAt"::timestamptz AT TIME ZONE 'Europe/Paris')
       ORDER BY date ASC
     `;
 
