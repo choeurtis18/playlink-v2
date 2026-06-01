@@ -135,6 +135,7 @@ export default function GamePage({ params }: PageProps) {
           onPrev={handlePrev}
           onReset={resetDeck}
           finished={finished}
+          deck={deck}
         />
       </div>
       <PlayFooter
