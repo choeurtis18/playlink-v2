@@ -34,10 +34,15 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
     api.get<{ data: AdminCategory[] }>(`/api/admin/categories?gameId=${selectedGameId}&limit=100`)
       .then((res) => {
         setCategories(res.data.data);
-        if (!isEdit && !initializedWithDefault) setCategoryId(res.data.data[0]?.id ?? '');
+        const ids = res.data.data.map((c) => c.id);
+        if (!initializedWithDefault && !ids.includes(categoryId)) {
+          setCategoryId(res.data.data[0]?.id ?? '');
+        }
+        setInitializedWithDefault(false);
       })
       .catch(() => {});
-  }, [selectedGameId, isEdit, initializedWithDefault]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedGameId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +78,7 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Jeu *</label>
-          <select value={selectedGameId} onChange={(e) => setSelectedGameId(e.target.value)} className="input" disabled={isEdit}>
+          <select value={selectedGameId} onChange={(e) => setSelectedGameId(e.target.value)} className="input">
             {games.map((g) => (
               <option key={g.id} value={g.id}>{g.icon} {g.name}</option>
             ))}
@@ -81,12 +86,11 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
-          <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required disabled={isEdit} className="input">
+          <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required className="input">
             {categories.map((c) => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
-          {isEdit && <p className="text-xs text-gray-400 mt-1">La catégorie ne peut pas être modifiée.</p>}
         </div>
       </div>
 
