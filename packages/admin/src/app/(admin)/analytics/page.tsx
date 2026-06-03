@@ -66,10 +66,14 @@ export default function AnalyticsPage() {
   const handleExport = async () => {
     setExporting(true);
     try {
+      const from = exportFrom || 'debut';
+      const to = exportTo || new Date().toISOString().slice(0, 10);
+      const filename = `analytics-${from}-au-${to}.csv`;
       const params = new URLSearchParams();
       if (exportFrom) params.set('from', exportFrom);
       if (exportTo) params.set('to', exportTo);
-      await downloadCSV(`/api/admin/analytics/export?${params}`, 'analytics-export.csv');
+      params.set('filename', filename);
+      await downloadCSV(`/api/admin/analytics/export?${params}`, filename);
     } catch {
       setError('Export échoué');
     } finally {

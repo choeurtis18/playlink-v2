@@ -94,7 +94,9 @@ export default function GamesPage() {
   const handleExport = async () => {
     setExporting(true);
     try {
-      await downloadCSV('/api/admin/games/export', 'games.csv');
+      const date = new Date().toISOString().slice(0, 10);
+      const filename = `jeux-${date}.csv`;
+      await downloadCSV(`/api/admin/games/export?filename=${encodeURIComponent(filename)}`, filename);
     } catch (err) {
       setError(apiError(err));
     } finally {

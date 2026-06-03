@@ -103,8 +103,14 @@ export default function CategoriesPage() {
   const handleExport = async () => {
     setExporting(true);
     try {
-      const params = filterGameId ? `?gameId=${filterGameId}` : '';
-      await downloadCSV(`/api/admin/categories/export${params}`, 'categories.csv');
+      const gameName = games.find((g) => g.id === filterGameId)?.name;
+      const date = new Date().toISOString().slice(0, 10);
+      const slug = gameName ? `-${gameName.toLowerCase().replace(/\s+/g, '-')}` : '';
+      const filename = `categories${slug}-${date}.csv`;
+      const params = new URLSearchParams();
+      if (filterGameId) params.set('gameId', filterGameId);
+      params.set('filename', filename);
+      await downloadCSV(`/api/admin/categories/export?${params}`, filename);
     } catch (err) {
       setError(apiError(err));
     } finally {

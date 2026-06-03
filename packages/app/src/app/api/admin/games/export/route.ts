@@ -23,10 +23,14 @@ export async function GET(request: NextRequest) {
     const headers = ['id', 'name', 'slug', 'description', 'icon', 'colorMain', 'colorSecondary', 'active', 'order'];
     const rows = games.map((g) => [g.id, g.name, g.slug, g.description, g.icon, g.colorMain, g.colorSecondary, g.active, g.order]);
     const lines = [headers.join(','), ...rows.map(rowToCSV)].join('\n');
-    return new Response('﻿' + lines, {
+    const filename = request.nextUrl.searchParams.get('filename') || 'jeux.csv';
+    const encoded = encodeURIComponent(filename);
+    const bom = Buffer.from('﻿', 'utf8');
+    const content = Buffer.from(lines, 'utf8');
+    return new Response(Buffer.concat([bom, content]), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="games.csv"',
+        'Content-Disposition': `attachment; filename="${filename}"; filename*=UTF-8''${encoded}`,
       },
     });
   } catch (err) {

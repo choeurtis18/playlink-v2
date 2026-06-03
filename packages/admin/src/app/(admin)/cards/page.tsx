@@ -139,8 +139,13 @@ export default function CardsPage() {
       if (filterGameId) params.set('gameId', filterGameId);
       if (filterCategoryId) params.set('categoryId', filterCategoryId);
       if (search) params.set('search', search);
-      const qs = params.toString();
-      await downloadCSV(`/api/admin/cards/export${qs ? `?${qs}` : ''}`, 'cards.csv');
+      const date = new Date().toISOString().slice(0, 10);
+      const gameName = games.find((g) => g.id === filterGameId)?.name;
+      const catName = categories.find((c) => c.id === filterCategoryId)?.name;
+      const parts = ['cartes', gameName, catName, search || undefined, date].filter(Boolean);
+      const filename = parts.map((p) => p!.toLowerCase().replace(/\s+/g, '-')).join('-') + '.csv';
+      params.set('filename', filename);
+      await downloadCSV(`/api/admin/cards/export?${params}`, filename);
     } catch (err) {
       setError(apiError(err));
     } finally {

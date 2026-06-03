@@ -25,10 +25,14 @@ export async function GET(request: NextRequest) {
     const headers = ['id', 'gameId', 'name', 'slug', 'description', 'order'];
     const rows = categories.map((c) => [c.id, c.gameId, c.name, c.slug, c.description, c.order]);
     const lines = [headers.join(','), ...rows.map(rowToCSV)].join('\n');
-    return new Response('﻿' + lines, {
+    const filename = request.nextUrl.searchParams.get('filename') || 'categories.csv';
+    const encoded = encodeURIComponent(filename);
+    const bom = Buffer.from('﻿', 'utf8');
+    const content = Buffer.from(lines, 'utf8');
+    return new Response(Buffer.concat([bom, content]), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="categories.csv"',
+        'Content-Disposition': `attachment; filename="${filename}"; filename*=UTF-8''${encoded}`,
       },
     });
   } catch (err) {

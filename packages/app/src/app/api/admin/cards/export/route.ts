@@ -31,10 +31,14 @@ export async function GET(request: NextRequest) {
     const headers = ['id', 'categoryId', 'text', 'difficulty', 'tags', 'active', 'order'];
     const rows = cards.map((c) => [c.id, c.categoryId, c.text, c.difficulty, c.tags.join('|'), c.active, c.order]);
     const lines = [headers.join(','), ...rows.map(rowToCSV)].join('\n');
-    return new Response('﻿' + lines, {
+    const filename = searchParams.get('filename') || 'cartes.csv';
+    const encoded = encodeURIComponent(filename);
+    const bom = Buffer.from('﻿', 'utf8');
+    const content = Buffer.from(lines, 'utf8');
+    return new Response(Buffer.concat([bom, content]), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="cards.csv"',
+        'Content-Disposition': `attachment; filename="${filename}"; filename*=UTF-8''${encoded}`,
       },
     });
   } catch (err) {

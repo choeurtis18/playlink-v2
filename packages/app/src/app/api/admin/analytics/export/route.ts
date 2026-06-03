@@ -1,5 +1,5 @@
 export const dynamic = 'force-dynamic';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 import { prisma } from '@/lib/api-utils/prisma';
 import { apiError } from '@/lib/api-utils/error-handler';
 import { requireAuth } from '@/lib/api-utils/auth';
@@ -43,11 +43,15 @@ export async function GET(request: NextRequest) {
     ].map((v) => `"${v}"`).join(','));
 
     const csv = [header, ...rows].join('\n');
+    const filename = searchParams.get('filename') || `analytics-export-${Date.now()}.csv`;
+    const encoded = encodeURIComponent(filename);
+    const bom = Buffer.from('﻿', 'utf8');
+    const content = Buffer.from(csv, 'utf8');
 
-    return new NextResponse(csv, {
+    return new Response(Buffer.concat([bom, content]), {
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': `attachment; filename="analytics-export-${Date.now()}.csv"`,
+        'Content-Disposition': `attachment; filename="${filename}"; filename*=UTF-8''${encoded}`,
       },
     });
   } catch (err) {
