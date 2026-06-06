@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       const text = row[idx('text')]?.trim();
       if (!categoryId) { errors.push(`Ligne ${lineNum} : categoryId requis`); continue; }
       if (!text) { errors.push(`Ligne ${lineNum} : text requis`); continue; }
-      const rawDiff = headers.includes('difficulty') ? row[idx('difficulty')]?.trim() : '';
+      const rawDiff = headers.includes('difficulty') ? row[idx('difficulty')]?.trim().toLowerCase() : '';
       const difficulty = rawDiff === 'easy' || rawDiff === 'medium' || rawDiff === 'hard' ? rawDiff : null;
       const id = headers.includes('id') ? row[idx('id')]?.trim() || undefined : undefined;
       upserts.push({

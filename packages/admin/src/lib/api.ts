@@ -15,8 +15,13 @@ api.interceptors.request.use(async (config) => {
 });
 
 export function apiError(err: unknown): string {
-  const e = err as { response?: { data?: { error?: { message?: string } } } };
-  return e.response?.data?.error?.message ?? 'Une erreur est survenue';
+  const e = err as { response?: { data?: { error?: { message?: string; details?: { path: string; message: string }[] } } } };
+  const error = e.response?.data?.error;
+  if (!error) return 'Une erreur est survenue';
+  if (error.details?.length) {
+    return error.details.map((d) => d.message).join(' · ');
+  }
+  return error.message ?? 'Une erreur est survenue';
 }
 
 export async function downloadCSV(url: string, filename: string): Promise<void> {
