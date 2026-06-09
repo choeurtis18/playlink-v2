@@ -44,10 +44,15 @@ function CardFace({ game, category, card }: { game: ExportGame; category: Export
         <p className="text-2xl font-black text-white leading-snug flex items-center justify-center flex-1 text-center">
           {card?.text}
         </p>
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-sm">👈</span>
-          <span className="text-sm text-white">Swipe pour changer</span>
-          <span className="text-sm">👉</span>
+        <div className="flex items-center justify-center gap-6">
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-sm">👈</span>
+            <span className="text-sm text-white">Précédent</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <span className="text-sm">👉</span>
+            <span className="text-sm text-white">Suivant</span>
+          </div>
         </div>
       </div>
     </div>
