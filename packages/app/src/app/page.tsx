@@ -1,16 +1,28 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Users } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
+import { useSessionStore } from '@/store/sessionStore';
 import { Header } from '@/components/Header';
 import { GameCard } from '@/components/GameCard';
+import { PlayersModal } from '@/components/PlayersModal';
 
 export default function HomePage() {
   const { games, isLoading, isOffline, lastSyncAt, fetchGames } = useGameStore();
+  const { players, phase, _hasHydrated } = useSessionStore();
+  const router = useRouter();
+  const [showPlayers, setShowPlayers] = useState(false);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
+    if (players.length === 0) {
+      router.replace('/setup');
+      return;
+    }
+
     const shouldRefresh = !lastSyncAt || Date.now() - new Date(lastSyncAt).getTime() > 5 * 60 * 1000;
     if (shouldRefresh) {
       fetchGames().catch(() => {});
@@ -21,13 +33,45 @@ export default function HomePage() {
     };
     document.addEventListener('visibilitychange', onVisible);
     return () => document.removeEventListener('visibilitychange', onVisible);
-  }, [fetchGames, lastSyncAt]);
+  }, [_hasHydrated, fetchGames, lastSyncAt, phase, players.length, router]);
+
+  if (!_hasHydrated || players.length === 0) return null;
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-gradient-to-b from-indigo-950 via-purple-900 to-indigo-950">
       <Header />
 
-      <main className="flex-1 px-4 py-6 pb-8">
+      <main className="flex-1 px-4 py-6 pb-20">
+        {/* CTA Joueurs */}
+        <motion.button
+          onClick={() => setShowPlayers(true)}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          whileTap={{ scale: 0.97 }}
+          className="w-full flex items-center gap-3 bg-white/10 border border-white/15 rounded-2xl px-4 py-3 mb-6 text-left"
+        >
+          <div className="flex -space-x-2">
+            {players.slice(0, 4).map((p) => (
+              <span
+                key={p.id}
+                className="w-8 h-8 rounded-full bg-indigo-800 border-2 border-indigo-950 flex items-center justify-center text-base"
+              >
+                {p.avatar}
+              </span>
+            ))}
+          </div>
+          <div className="flex-1">
+            <p className="text-white text-sm font-semibold">
+              {players.length} joueur{players.length > 1 ? 's' : ''}
+            </p>
+            <p className="text-white/50 text-xs">
+              {players.map((p) => p.name).join(', ')}
+            </p>
+          </div>
+          <Users size={18} className="text-white/40" />
+        </motion.button>
+
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -81,6 +125,8 @@ export default function HomePage() {
           </motion.p>
         )}
       </main>
+
+      <PlayersModal open={showPlayers} onClose={() => setShowPlayers(false)} />
     </div>
   );
 }

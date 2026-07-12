@@ -393,6 +393,70 @@ Ce n'est **pas du roast** — c'est l'occasion de se dire des vérités, de part
 *Si une question est trop sensible, le joueur visé peut "passer" sans expliquer.* Le respect avant tout ❤️`,
 };
 
+export const gameRuleSlides: Record<string, Array<{ order: number; title: string; content: string; imageUrl?: string }>> = {
+  'action-ou-verite': [
+    {
+      order: 0,
+      title: 'Bienvenue ! 🎉',
+      content: `Chaque joueur tire une carte et doit :
+
+- **Répondre honnêtement** à une *VÉRITÉ*
+- Ou **relever un défi** *ACTION*
+
+---
+
+**Règle d'or**
+
+*Pas de jugement, pas de moqueries.*
+
+**Juste du fun et des vraies connexions !** ✨`,
+    },
+    {
+      order: 1,
+      title: '4 Catégories',
+      content: `- 💬 **Vérités légères** — Pour briser la glace
+- 🔥 **Vérités profondes** — Pour aller plus loin
+- 🎈 **Actions douces** — Défis fun et safe
+- 🔞 **Actions osées** — Pour pimenter la soirée
+
+Choisissez celle qui vous convient ! 🎯`,
+    },
+    {
+      order: 2,
+      title: 'Comment jouer ?',
+      content: `## Avant de commencer
+1. Mettez-vous **en cercle**
+2. Choisissez une **catégorie** ensemble
+3. Prévoir du **respect et de la bienveillance**
+
+## À chaque tour
+1. Un joueur tire une **carte**
+2. Il lit à **haute voix** ce qu'il y a dessus
+3. Il **agit** ou **répond** selon la carte
+4. **Pas de pression** — on peut toujours passer !
+
+C'est party ! 🎉`,
+    },
+    {
+      order: 3,
+      title: 'Conseils d\'or',
+      content: `✅ **À faire:**
+- Écouter **sans juger**
+- Encourager **la vulnérabilité**
+- Rire **avec** les gens, pas **d'eux**
+- Respecter les **limites**
+
+❌ **À éviter:**
+- Forcer quelqu'un à faire quelque chose
+- Moqueries **méchantes**
+- Raconter les secrets **après le jeu**
+- Prendre les choses trop **au sérieux**
+
+**L'objectif:** s'amuser et créer des **vrais moments** ensemble ! 💝`,
+    },
+  ],
+};
+
 export const dilemmeGame = {
   name: 'Dilemme',
   slug: 'dilemme',

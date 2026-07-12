@@ -7,7 +7,7 @@
     "prebuild": "pnpm --filter @playlink/shared run build",
     "build": "next build",
     "postinstall": "prisma generate",
-    "db:seed": "tsx src/db/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
@@ -39,6 +39,6 @@
     "typescript": "^5.3.3"
   },
   "prisma": {
-    "seed": "tsx src/db/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   }
 }

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Lilita_One } from 'next/font/google';
 import './globals.css';
 import { ThemeScript } from '@/components/ThemeScript';
+import { SplashScreen } from '@/components/SplashScreen';
+import { BottomNav } from '@/components/BottomNav';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const lilitaOne = Lilita_One({ subsets: ['latin'], weight: '400', variable: '--font-lilita' });
@@ -35,9 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeScript />
       </head>
       <body className={`${inter.variable} ${lilitaOne.variable} font-sans min-h-[100dvh] flex flex-col`}>
+        <SplashScreen />
         <div className="flex-1 flex flex-col max-w-md mx-auto w-full">
           {children}
         </div>
+        <BottomNav />
       </body>
     </html>
   );
