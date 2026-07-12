@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Gamepad2, Layers, CreditCard, BookOpen, BarChart2, LogOut } from 'lucide-react';
+import { Gamepad2, Layers, CreditCard, BookOpen, BarChart2, LogOut, Shield, Award } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/authStore';
 
@@ -12,6 +12,8 @@ const links = [
   { href: '/cards', label: 'Cartes', icon: CreditCard },
   { href: '/game-rules', label: 'Règles', icon: BookOpen },
   { href: '/analytics', label: 'Analytics', icon: BarChart2 },
+  { href: '/badges', label: 'Badges', icon: Award },
+  { href: '/legal', label: 'Légal', icon: Shield },
 ];
 
 export function Sidebar() {

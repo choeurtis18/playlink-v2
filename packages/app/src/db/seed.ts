@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import { resolve } from "path";
 config({ path: resolve(process.cwd(), ".env.local") });
 import { PrismaClient } from "@prisma/client";
-import { newGames, dilemmeGame, defaultRules } from "./seed-new-games";
+import { newGames, dilemmeGame, defaultRules, gameRuleSlides } from "./seed-new-games";
 
 const prisma = new PrismaClient();
 
@@ -763,6 +763,34 @@ async function main() {
         update: { rules },
         create: { gameId: game.id, rules },
       });
+    }
+  }
+
+  // Seed game rule slides
+  for (const [gameSlug, slides] of Object.entries(gameRuleSlides)) {
+    const game = await prisma.game.findUnique({ where: { slug: gameSlug } });
+    if (game) {
+      for (const slide of slides) {
+        await prisma.gameRuleSlide.upsert({
+          where: {
+            id: `${game.id}-slide-${slide.order}`,
+          },
+          update: {
+            title: slide.title,
+            content: slide.content,
+            imageUrl: slide.imageUrl || null,
+          },
+          create: {
+            id: `${game.id}-slide-${slide.order}`,
+            gameId: game.id,
+            order: slide.order,
+            title: slide.title,
+            content: slide.content,
+            imageUrl: slide.imageUrl || null,
+          },
+        });
+      }
+      console.log(`  Rule slides created for: ${game.name}`);
     }
   }
 

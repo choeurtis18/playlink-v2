@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import { RotateCcw } from 'lucide-react';
 import type { ExportCard, ExportGame, ExportCategory } from '@/store/gameStore';
 
 interface PlayCardProps {
@@ -11,10 +10,9 @@ interface PlayCardProps {
   currentIndex: number;
   total: number;
   direction: number;
-  onNext: () => void;
-  onPrev: () => void;
-  onReset: () => void;
+  onReveal: () => void;
   finished: boolean;
+  deck: ExportCard[];
 }
 
 const STACK = [
@@ -41,19 +39,10 @@ function CardFace({ game, category, card }: { game: ExportGame; category: Export
           <span className="text-xs">{category.icon ?? '🎮'}</span>
           <span className="text-xs text-white uppercase tracking-widest">{category.name}</span>
         </div>
-        <p className="text-2xl font-black text-white leading-snug flex items-center justify-center flex-1 text-center">
+        <p className="text-2xl font-black text-white leading-snug flex items-center justify-center flex-1 text-center py-4">
           {card?.text}
         </p>
-        <div className="flex items-center justify-center gap-6">
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-sm">👈</span>
-            <span className="text-sm text-white">Précédent</span>
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-sm">👉</span>
-            <span className="text-sm text-white">Suivant</span>
-          </div>
-        </div>
+        <p className="text-center text-white text-sm">Swipe ou appuie sur Révéler</p>
       </div>
     </div>
   );
@@ -66,48 +55,19 @@ export function PlayCard({
   currentIndex,
   total,
   direction,
-  onNext,
-  onPrev,
-  onReset,
+  onReveal,
   finished,
   deck,
-}: PlayCardProps & { deck: ExportCard[] }) {
+}: PlayCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-300, 0, 300], [-18, 0, 18]);
 
   const nextCard = deck[currentIndex + 1];
-  const prevCard = currentIndex > 0 ? deck[currentIndex - 1] : undefined;
-
-  // Which peek card to show depends on drag direction
-  const dragX = x.get();
-  const peekCard = dragX > 20 ? prevCard : dragX < -20 ? nextCard : undefined;
 
   return (
     <div className="relative flex flex-col h-full">
       <div className="relative flex-1 flex flex-col items-center justify-center px-4 pb-8">
-        {finished ? (
-          <motion.div
-            key="finished"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="flex flex-col items-center gap-6 text-center"
-          >
-            <div className="text-6xl">🎉</div>
-            <div>
-              <p className="text-3xl font-black text-white">Partie terminée !</p>
-              <p className="text-sm text-white/60 mt-2">{total} cartes jouées</p>
-            </div>
-            <button
-              onClick={onReset}
-              className="flex items-center gap-2 px-6 py-3 rounded-full text-white font-semibold text-sm shadow-md mt-4"
-              style={{ background: `linear-gradient(135deg, ${game.colorMain}, ${game.colorSecondary})` }}
-            >
-              <RotateCcw size={16} />
-              Changer de catégorie
-            </button>
-          </motion.div>
-        ) : (
+        {finished ? null : (
           <div className="relative w-full max-w-md" style={{ minHeight: 300 }}>
             {/* Stack cards behind */}
             {STACK.map((s, i) => (
@@ -125,11 +85,11 @@ export function PlayCard({
               />
             ))}
 
-            {/* Peek card (next or prev) — visible behind during drag */}
+            {/* Peek card (next) — visible behind during drag */}
             <AnimatePresence>
-              {peekCard && (
+              {nextCard && (
                 <motion.div
-                  key={peekCard.id}
+                  key={nextCard.id}
                   initial={{ opacity: 0, scale: 0.93 }}
                   animate={{ opacity: 0.85, scale: 0.96 }}
                   exit={{ opacity: 0, scale: 0.93 }}
@@ -137,7 +97,7 @@ export function PlayCard({
                   className="absolute inset-0"
                   style={{ zIndex: STACK.length + 1 }}
                 >
-                  <CardFace game={game} category={category} card={peekCard} />
+                  <CardFace game={game} category={category} card={nextCard} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -178,8 +138,7 @@ export function PlayCard({
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.2}
                 onDragEnd={(_, info) => {
-                  if (info.offset.x > 80) onNext();
-                  else if (info.offset.x < -80) onPrev();
+                  if (Math.abs(info.offset.x) > 80) onReveal();
                 }}
                 whileDrag={{ cursor: 'grabbing' }}
               >

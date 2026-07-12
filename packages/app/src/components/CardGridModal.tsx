@@ -10,6 +10,7 @@ interface CardGridModalProps {
   onSelectCard: (index: number) => void;
   onClose: () => void;
   gameColors: { colorMain: string; colorSecondary: string };
+  readOnly?: boolean;
 }
 
 export function CardGridModal({
@@ -18,6 +19,7 @@ export function CardGridModal({
   onSelectCard,
   onClose,
   gameColors,
+  readOnly = false,
 }: CardGridModalProps) {
   return (
     <AnimatePresence>
@@ -46,7 +48,10 @@ export function CardGridModal({
               borderColor: 'rgba(255, 255, 255, 0.1)',
             }}
           >
+            <div>
             <h2 className="text-lg font-bold text-white">Cartes du jeu</h2>
+            {readOnly && <p className="text-white/50 text-xs">Lecture seule pendant la partie</p>}
+          </div>
             <motion.button
               onClick={onClose}
               whileHover={{ scale: 1.1 }}
@@ -67,7 +72,7 @@ export function CardGridModal({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: index * 0.02 }}
                   onClick={() => {
-                    onSelectCard(index);
+                    if (!readOnly) onSelectCard(index);
                   }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

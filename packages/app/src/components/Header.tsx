@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, WifiOff, Grid3X3, BookOpen } from 'lucide-react';
+import { ArrowLeft, WifiOff, BookOpen } from 'lucide-react';
 import { useGameStore } from '@/store/gameStore';
 
 interface HeaderProps {
@@ -14,11 +14,10 @@ interface HeaderProps {
   colorSecondary?: string;
   subtitle?: string;
   counter?: string;
-  onGridClick?: () => void;
   onRulesClick?: () => void;
 }
 
-export function Header({ title, showBack, onBack, colorMain, colorSecondary, subtitle, counter, onGridClick, onRulesClick }: HeaderProps) {
+export function Header({ title, showBack, onBack, colorMain, colorSecondary, subtitle, counter, onRulesClick }: HeaderProps) {
   const { isOffline } = useGameStore();
   const router = useRouter();
 
@@ -51,15 +50,9 @@ export function Header({ title, showBack, onBack, colorMain, colorSecondary, sub
         </div>
 
         {title && showBack && (
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-0.5">
             <h1 className="text-lg font-semibold text-white uppercase">{title}</h1>
-            {counter ? (
-              <>
-                <p className="text-sm text-white/80">{subtitle}</p>
-              </>
-            ) : (
-              <p className="text-xs text-white/80">{subtitle}</p>
-            )}
+            <p className="text-sm text-white/80">{subtitle}</p>
           </div>
         )}
 
@@ -73,17 +66,6 @@ export function Header({ title, showBack, onBack, colorMain, colorSecondary, sub
               title="Règles du jeu"
             >
               <BookOpen size={20} />
-            </motion.button>
-          )}
-          {onGridClick && counter && (
-            <motion.button
-              onClick={onGridClick}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2 rounded-full text-white hover:bg-white/10 transition-colors"
-              title="Voir toutes les cartes"
-            >
-              <Grid3X3 size={20} />
             </motion.button>
           )}
           {isOffline && (

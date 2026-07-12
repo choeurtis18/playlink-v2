@@ -30,8 +30,9 @@ model Game {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
-  categories Category[]
-  rules      GameRules?
+  categories  Category[]
+  rules       GameRules?
+  ruleSlides  GameRuleSlide[]
 
   @@map("games")
 }
@@ -44,6 +45,20 @@ model GameRules {
   updatedAt DateTime @updatedAt
 
   @@map("game_rules")
+}
+
+model GameRuleSlide {
+  id        String   @id @default(cuid())
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+  imageUrl  String?
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("game_rule_slides")
 }
 
 model Category {
@@ -77,6 +92,87 @@ model Card {
   updatedAt  DateTime @updatedAt
 
   @@map("cards")
+}
+
+model AppUser {
+  id         String      @id @default(cuid())
+  supabaseId String      @unique
+  email      String      @unique
+  players    Player[]
+  badges     UserBadge[]
+  createdAt  DateTime    @default(now())
+
+  @@map("app_users")
+}
+
+model Player {
+  id          String              @id @default(cuid())
+  name        String
+  avatar      String?
+  appUserId   String
+  appUser     AppUser             @relation(fields: [appUserId], references: [id])
+  tagScores   Json                @default("{}")
+  sessions    GameSessionPlayer[]
+  createdAt   DateTime            @default(now())
+
+  @@map("players")
+}
+
+model GameSession {
+  id         String              @id @default(cuid())
+  gameId     String
+  categoryId String
+  status     String              @default("finished")
+  players    GameSessionPlayer[]
+  createdAt  DateTime            @default(now())
+
+  @@map("game_sessions")
+}
+
+model GameSessionPlayer {
+  id              String      @id @default(cuid())
+  sessionId       String
+  session         GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  playerId        String
+  player          Player      @relation(fields: [playerId], references: [id])
+  score           Int         @default(0)
+  tagScoresGained Json        @default("{}")
+
+  @@unique([sessionId, playerId])
+  @@map("game_session_players")
+}
+
+model Badge {
+  id          String      @id @default(cuid())
+  key         String      @unique
+  name        String
+  description String
+  icon        String
+  users       UserBadge[]
+
+  @@map("badges")
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  appUserId String
+  appUser   AppUser  @relation(fields: [appUserId], references: [id])
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+  earnedAt  DateTime @default(now())
+
+  @@unique([appUserId, badgeId])
+  @@map("user_badges")
+}
+
+model LegalContent {
+  id        String   @id @default(cuid())
+  key       String   @unique // privacy | terms
+  title     String
+  content   String
+  updatedAt DateTime @updatedAt
+
+  @@map("legal_contents")
 }
 
 model AuditLog {

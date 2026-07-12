@@ -42,6 +42,7 @@ interface GameStore {
   activeCategoryId: string | null;
   deck: ExportCard[];
   currentIndex: number;
+  cardsPerGame: number;
 
   darkMode: boolean;
   isLoading: boolean;
@@ -53,6 +54,7 @@ interface GameStore {
   prev: () => void;
   resetDeck: () => void;
   toggleDark: () => void;
+  setCardsPerGame: (n: number) => void;
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -72,6 +74,7 @@ export const useGameStore = create<GameStore>()(
       activeCategoryId: null,
       deck: [],
       currentIndex: 0,
+      cardsPerGame: 10,
       darkMode: false,
       isLoading: false,
       isOffline: false,
@@ -91,13 +94,13 @@ export const useGameStore = create<GameStore>()(
       },
 
       startDeck: (categoryId) => {
-        const { games } = get();
+        const { games, cardsPerGame } = get();
         for (const game of games) {
           const category = game.categories.find((c) => c.id === categoryId);
           if (category) {
             set({
               activeCategoryId: categoryId,
-              deck: shuffle(category.cards),
+              deck: shuffle(category.cards).slice(0, cardsPerGame),
               currentIndex: 0,
             });
             return;
@@ -121,6 +124,8 @@ export const useGameStore = create<GameStore>()(
 
       resetDeck: () => set({ activeCategoryId: null, deck: [], currentIndex: 0 }),
 
+      setCardsPerGame: (n) => set({ cardsPerGame: n }),
+
       toggleDark: () => {
         const next = !get().darkMode;
         if (typeof document !== 'undefined') {
@@ -135,6 +140,7 @@ export const useGameStore = create<GameStore>()(
         games: state.games,
         lastSyncAt: state.lastSyncAt,
         darkMode: state.darkMode,
+        cardsPerGame: state.cardsPerGame,
         activeCategoryId: state.activeCategoryId,
         deck: state.deck,
         currentIndex: state.currentIndex,
