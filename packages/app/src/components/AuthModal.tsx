@@ -20,6 +20,7 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -30,6 +31,7 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
     setSuccessMsg('');
     try {
       if (mode === 'signup') {
+        if (password !== confirmPassword) { setError('Les mots de passe ne correspondent pas.'); return; }
         await signUp(email, password, firstName, lastName);
         setSuccessMsg('Compte créé ! Tu peux jouer.');
         const hadGuestPlayers = players.some((p) => p.id.startsWith('guest-'));
@@ -80,7 +82,7 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
               <form onSubmit={handleSubmit} className="px-5 py-5 flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
                   {mode === 'signup' && (
-                    <div className="grid grid-cols-2 gap-2">
+                    <>
                       <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
                         <User size={16} className="text-white/40 shrink-0" />
                         <input
@@ -89,20 +91,21 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
                           onChange={(e) => setFirstName(e.target.value)}
                           placeholder="Prénom"
                           required
-                          className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none min-w-0"
+                          className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none"
                         />
                       </div>
                       <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
+                        <User size={16} className="text-white/40 shrink-0" />
                         <input
                           type="text"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
                           placeholder="Nom"
                           required
-                          className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none min-w-0"
+                          className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none"
                         />
                       </div>
-                    </div>
+                    </>
                   )}
                   <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
                     <Mail size={16} className="text-white/40 shrink-0" />
@@ -134,6 +137,20 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
+                  {mode === 'signup' && (
+                    <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
+                      <Lock size={16} className="text-white/40 shrink-0" />
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirmer le mot de passe"
+                        required
+                        minLength={6}
+                        className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <AnimatePresence>
@@ -171,7 +188,7 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
 
                 <button
                   type="button"
-                  onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); setSuccessMsg(''); setFirstName(''); setLastName(''); }}
+                  onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); setSuccessMsg(''); setFirstName(''); setLastName(''); setConfirmPassword(''); }}
                   className="text-white/50 text-xs text-center hover:text-white/80 transition-colors"
                 >
                   {mode === 'login'
