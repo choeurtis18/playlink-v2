@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { LogIn, LogOut, User, Layers, ChevronRight, Shield, FileText, HelpCircle } from 'lucide-react';
+import { LogIn, LogOut, User, Layers, ChevronRight, Shield, FileText, HelpCircle, Pencil, Check, X } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useGameStore } from '@/store/gameStore';
 import { useSessionStore } from '@/store/sessionStore';
@@ -14,13 +14,17 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 const CARDS_OPTIONS = [5, 10, 15];
 
 export default function ProfilPage() {
-  const { appUser, signOut } = useAuthStore();
+  const { appUser, signOut, updateProfile } = useAuthStore();
   const { cardsPerGame, setCardsPerGame } = useGameStore();
   const { scores, players, phase } = useSessionStore();
   const [showAuth, setShowAuth] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [legalDoc, setLegalDoc] = useState<'privacy' | 'terms' | null>(null);
   const [supportEmail, setSupportEmail] = useState('support@playlink.app');
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [editFirstName, setEditFirstName] = useState('');
+  const [editLastName, setEditLastName] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/legal/support_email`)
@@ -47,13 +51,63 @@ export default function ProfilPage() {
           {appUser ? (
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 py-1">
-                <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center flex-shrink-0">
                   <User size={20} className="text-pink-400" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-bold text-sm truncate">{appUser.email}</p>
-                  <p className="text-white/40 text-xs">Compte connecté</p>
-                </div>
+                {editingProfile ? (
+                  <div className="flex-1 flex flex-col gap-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        value={editFirstName}
+                        onChange={(e) => setEditFirstName(e.target.value)}
+                        placeholder="Prénom"
+                        className="bg-white/10 rounded-xl px-3 py-2 text-white text-sm outline-none placeholder-white/30"
+                      />
+                      <input
+                        value={editLastName}
+                        onChange={(e) => setEditLastName(e.target.value)}
+                        placeholder="Nom"
+                        className="bg-white/10 rounded-xl px-3 py-2 text-white text-sm outline-none placeholder-white/30"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={async () => {
+                          setSavingProfile(true);
+                          try { await updateProfile(editFirstName, editLastName); setEditingProfile(false); }
+                          finally { setSavingProfile(false); }
+                        }}
+                        disabled={savingProfile}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-pink-500 text-white text-sm font-semibold"
+                      >
+                        <Check size={14} /> Enregistrer
+                      </button>
+                      <button
+                        onClick={() => setEditingProfile(false)}
+                        className="px-3 py-2 rounded-xl bg-white/10 text-white/60"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex-1 min-w-0">
+                    {(appUser.firstName || appUser.lastName) ? (
+                      <p className="text-white font-bold text-sm">{[appUser.firstName, appUser.lastName].filter(Boolean).join(' ')}</p>
+                    ) : (
+                      <p className="text-white/40 text-sm italic">Aucun nom renseigné</p>
+                    )}
+                    <p className="text-white/40 text-xs truncate">{appUser.email}</p>
+                  </div>
+                )}
+                {!editingProfile && (
+                  <button
+                    onClick={() => { setEditFirstName(appUser.firstName ?? ''); setEditLastName(appUser.lastName ?? ''); setEditingProfile(true); }}
+                    className="p-2 rounded-xl bg-white/5 text-white/40 hover:text-white/70 transition-colors"
+                  >
+                    <Pencil size={14} />
+                  </button>
+                )}
               </div>
               <button
                 onClick={() => signOut()}

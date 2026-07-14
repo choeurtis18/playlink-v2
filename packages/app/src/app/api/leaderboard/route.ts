@@ -7,11 +7,11 @@ import { getPlayerType } from '@/lib/tag-mapping';
 
 export async function GET(request: NextRequest) {
   try {
-    await requireAppAuth(request);
+    const appUser = await requireAppAuth(request);
     const players = await prisma.player.findMany({
+      where: { appUserId: appUser.id },
       include: {
         sessions: { select: { score: true } },
-        appUser: { select: { email: true } },
       },
     });
 

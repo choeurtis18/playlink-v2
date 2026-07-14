@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Lock, Loader2, Eye, EyeOff } from 'lucide-react';
+import { X, Mail, Lock, Loader2, Eye, EyeOff, User } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { useSessionStore } from '@/store/sessionStore';
 
@@ -16,6 +16,8 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
   const { signIn, signUp, isLoading } = useAuthStore();
   const { players } = useSessionStore();
   const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -28,8 +30,11 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
     setSuccessMsg('');
     try {
       if (mode === 'signup') {
-        await signUp(email, password);
-        setSuccessMsg('Compte créé ! Vérifie ton email pour confirmer.');
+        await signUp(email, password, firstName, lastName);
+        setSuccessMsg('Compte créé ! Tu peux jouer.');
+        const hadGuestPlayers = players.some((p) => p.id.startsWith('guest-'));
+        onSuccess?.(hadGuestPlayers);
+        onClose();
       } else {
         await signIn(email, password);
         const hadGuestPlayers = players.some((p) => p.id.startsWith('guest-'));
@@ -74,6 +79,31 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
 
               <form onSubmit={handleSubmit} className="px-5 py-5 flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
+                  {mode === 'signup' && (
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
+                        <User size={16} className="text-white/40 shrink-0" />
+                        <input
+                          type="text"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          placeholder="Prénom"
+                          required
+                          className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none min-w-0"
+                        />
+                      </div>
+                      <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
+                        <input
+                          type="text"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          placeholder="Nom"
+                          required
+                          className="flex-1 bg-transparent text-white placeholder-white/40 text-sm outline-none min-w-0"
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
                     <Mail size={16} className="text-white/40 shrink-0" />
                     <input
@@ -141,7 +171,7 @@ export function AuthModal({ open, onClose, onSuccess }: AuthModalProps) {
 
                 <button
                   type="button"
-                  onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); setSuccessMsg(''); }}
+                  onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); setSuccessMsg(''); setFirstName(''); setLastName(''); }}
                   className="text-white/50 text-xs text-center hover:text-white/80 transition-colors"
                 >
                   {mode === 'login'
