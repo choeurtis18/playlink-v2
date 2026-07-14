@@ -98,6 +98,8 @@ model AppUser {
   id         String      @id @default(cuid())
   supabaseId String      @unique
   email      String      @unique
+  firstName  String?
+  lastName   String?
   players    Player[]
   badges     UserBadge[]
   createdAt  DateTime    @default(now())

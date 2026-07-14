@@ -8,6 +8,8 @@ export interface AppUser {
   id: string;
   email: string;
   supabaseId: string;
+  firstName: string | null;
+  lastName: string | null;
 }
 
 export interface DBPlayer {
@@ -24,9 +26,10 @@ interface AuthStore {
   token: string | null;
   isLoading: boolean;
 
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  updateProfile: (firstName: string, lastName: string) => Promise<void>;
   fetchPlayers: () => Promise<void>;
   createPlayer: (name: string, avatar: string) => Promise<DBPlayer>;
   updatePlayer: (id: string, name: string) => Promise<void>;
@@ -44,7 +47,7 @@ export const useAuthStore = create<AuthStore>()(
       token: null,
       isLoading: false,
 
-      signUp: async (email, password) => {
+      signUp: async (email, password, firstName, lastName) => {
         set({ isLoading: true });
         const supabase = getSupabaseClient();
         const { data, error } = await supabase.auth.signUp({ email, password });
@@ -56,7 +59,8 @@ export const useAuthStore = create<AuthStore>()(
         if (token) {
           const res = await fetch(`${API_URL}/api/app-users`, {
             method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firstName, lastName }),
           });
           const json = await res.json();
           set({ appUser: json.data, isLoading: false });
@@ -80,6 +84,18 @@ export const useAuthStore = create<AuthStore>()(
         set({ appUser: json.data, token, isLoading: false });
 
         await get().fetchPlayers();
+      },
+
+      updateProfile: async (firstName, lastName) => {
+        const { token, appUser } = get();
+        if (!token || !appUser) throw new Error('Not authenticated');
+        const res = await fetch(`${API_URL}/api/app-users`, {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, lastName }),
+        });
+        if (!res.ok) throw new Error('Mise à jour échouée');
+        set({ appUser: { ...appUser, firstName, lastName } });
       },
 
       signOut: async () => {
