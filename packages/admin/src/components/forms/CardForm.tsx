@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { api, apiError } from '@/lib/api';
+import { INTENSITY_LEVELS, INTENSITY_LABELS, INTENSITY_DEFAULT } from '@playlink/shared';
+import { INTENSITY_CLASS } from '@/lib/intensity';
 import type { AdminGame, AdminCategory, AdminCard } from '@/types/admin';
 
 interface CardFormProps {
@@ -22,7 +24,7 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
   const [categoryId, setCategoryId] = useState(card?.categoryId ?? defaultCategoryId ?? '');
   const [initializedWithDefault, setInitializedWithDefault] = useState(!!defaultCategoryId);
   const [text, setText] = useState(card?.text ?? '');
-  const [difficulty, setDifficulty] = useState<string>(card?.difficulty ?? '');
+  const [intensity, setIntensity] = useState<number>(card?.intensity ?? INTENSITY_DEFAULT);
   const [tags, setTags] = useState(card?.tags.join(', ') ?? '');
   const [active, setActive] = useState(card?.active ?? true);
   const [order, setOrder] = useState(card?.order ?? 0);
@@ -52,7 +54,7 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
     const body = {
       categoryId,
       text,
-      difficulty: difficulty || undefined,
+      intensity,
       tags: tagsArray,
       ...(isEdit ? { active, order } : {}),
     };
@@ -111,13 +113,26 @@ export function CardForm({ games, card, defaultCategoryId, onSuccess, onCancel }
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Difficulté</label>
-          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="input">
-            <option value="">Aucune</option>
-            <option value="easy">Facile</option>
-            <option value="medium">Moyen</option>
-            <option value="hard">Difficile</option>
-          </select>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Intensité <span className="text-gray-400 font-normal">({INTENSITY_LABELS[intensity]})</span>
+          </label>
+          <div className="flex gap-1">
+            {INTENSITY_LEVELS.map((level) => (
+              <button
+                key={level}
+                type="button"
+                onClick={() => setIntensity(level)}
+                title={INTENSITY_LABELS[level]}
+                className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${
+                  intensity === level
+                    ? `${INTENSITY_CLASS[level]} border-transparent`
+                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Tags (virgule séparés)</label>

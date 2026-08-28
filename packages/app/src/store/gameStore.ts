@@ -2,13 +2,15 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { INTENSITY_DEFAULT } from '@playlink/shared';
+import { pickWeighted } from '@/lib/intensity-deck';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 export interface ExportCard {
   id: string;
   text: string;
-  difficulty?: 'easy' | 'medium' | 'hard';
+  intensity: number;
   tags?: string[];
   order: number;
 }
@@ -44,11 +46,16 @@ interface GameStore {
   currentIndex: number;
   cardsPerGame: number;
 
+  /** Intensité choisie par jeu (clé = gameId), 1..5 */
+  intensityByGame: Record<string, number>;
+
   darkMode: boolean;
   isLoading: boolean;
   isOffline: boolean;
 
   fetchGames: () => Promise<void>;
+  getIntensity: (gameId: string) => number;
+  setIntensity: (gameId: string, value: number) => void;
   startDeck: (categoryId: string) => void;
   next: () => void;
   prev: () => void;
@@ -75,6 +82,7 @@ export const useGameStore = create<GameStore>()(
       deck: [],
       currentIndex: 0,
       cardsPerGame: 10,
+      intensityByGame: {},
       darkMode: false,
       isLoading: false,
       isOffline: false,
@@ -93,14 +101,22 @@ export const useGameStore = create<GameStore>()(
         }
       },
 
+      getIntensity: (gameId) => get().intensityByGame[gameId] ?? INTENSITY_DEFAULT,
+
+      setIntensity: (gameId, value) => {
+        const clamped = Math.min(5, Math.max(1, Math.round(value)));
+        set({ intensityByGame: { ...get().intensityByGame, [gameId]: clamped } });
+      },
+
       startDeck: (categoryId) => {
-        const { games, cardsPerGame } = get();
+        const { games, cardsPerGame, intensityByGame } = get();
         for (const game of games) {
           const category = game.categories.find((c) => c.id === categoryId);
           if (category) {
+            const target = intensityByGame[game.id] ?? INTENSITY_DEFAULT;
             set({
               activeCategoryId: categoryId,
-              deck: shuffle(category.cards).slice(0, cardsPerGame),
+              deck: pickWeighted(shuffle(category.cards), target, cardsPerGame),
               currentIndex: 0,
             });
             return;
@@ -141,6 +157,7 @@ export const useGameStore = create<GameStore>()(
         lastSyncAt: state.lastSyncAt,
         darkMode: state.darkMode,
         cardsPerGame: state.cardsPerGame,
+        intensityByGame: state.intensityByGame,
         activeCategoryId: state.activeCategoryId,
         deck: state.deck,
         currentIndex: state.currentIndex,

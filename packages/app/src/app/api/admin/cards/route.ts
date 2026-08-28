@@ -19,10 +19,12 @@ export async function GET(request: NextRequest) {
     const gameId = searchParams.get('gameId');
     const categoryId = searchParams.get('categoryId');
     const search = searchParams.get('search');
+    const intensity = parseInt(searchParams.get('intensity') ?? '');
     const where: Record<string, unknown> = {};
     if (categoryId) where.categoryId = categoryId;
     else if (gameId) where.category = { gameId };
     if (search) where.text = { contains: search, mode: 'insensitive' };
+    if (intensity >= 1 && intensity <= 5) where.intensity = intensity;
 
     const [cards, total] = await Promise.all([
       prisma.card.findMany({

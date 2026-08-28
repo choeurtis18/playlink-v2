@@ -177,7 +177,7 @@ async function main() {
           id: card.id,
           categoryId: card.categoryId,
           text: card.text,
-          difficulty: card.difficulty?.toLowerCase() || null,
+          intensity: Math.min(5, Math.max(1, parseInt(card.intensity) || 3)),
           tags,
           active: true,
           order: parseInt(card.order) || 0,

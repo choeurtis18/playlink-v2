@@ -197,7 +197,7 @@ export const newGames = [
           'Champignon',
           'Lampe',
         ],
-        difficulty: 'easy',
+        intensity: 1,
       },
       {
         name: 'Moyen',
@@ -247,7 +247,7 @@ export const newGames = [
           'Performance',
           'Atmosphère',
         ],
-        difficulty: 'medium',
+        intensity: 3,
       },
       {
         name: 'Difficile',
@@ -297,7 +297,7 @@ export const newGames = [
           'Phénomène',
           'Subjectivité',
         ],
-        difficulty: 'hard',
+        intensity: 5,
       },
     ],
     rules: `## Devine le Mot 🎯

@@ -10,7 +10,7 @@ const gameInclude = {
       cards: {
         where: { active: true },
         orderBy: { order: 'asc' as const },
-        select: { id: true, text: true, difficulty: true, tags: true, order: true },
+        select: { id: true, text: true, intensity: true, tags: true, order: true },
       },
     },
   },

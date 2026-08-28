@@ -33,7 +33,7 @@ export interface AdminCard {
   id: string;
   categoryId: string;
   text: string;
-  difficulty: 'easy' | 'medium' | 'hard' | null;
+  intensity: number;
   tags: string[];
   active: boolean;
   order: number;

@@ -28,8 +28,8 @@ export async function GET(request: NextRequest) {
     if (gameId) where.category = { gameId };
     if (search) where.text = { contains: search, mode: 'insensitive' };
     const cards = await prisma.card.findMany({ where, orderBy: { order: 'asc' } });
-    const headers = ['id', 'categoryId', 'text', 'difficulty', 'tags', 'active', 'order'];
-    const rows = cards.map((c) => [c.id, c.categoryId, c.text, c.difficulty, c.tags.join('|'), c.active, c.order]);
+    const headers = ['id', 'categoryId', 'text', 'intensity', 'tags', 'active', 'order'];
+    const rows = cards.map((c) => [c.id, c.categoryId, c.text, c.intensity, c.tags.join('|'), c.active, c.order]);
     const lines = [headers.join(','), ...rows.map(rowToCSV)].join('\n');
     const filename = searchParams.get('filename') || 'cartes.csv';
     const encoded = encodeURIComponent(filename);

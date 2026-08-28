@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { api, apiError } from '@/lib/api';
+import { INTENSITY_LEVELS, INTENSITY_LABELS, INTENSITY_DEFAULT } from '@playlink/shared';
 import type { AdminGame, AdminCategory } from '@/types/admin';
 
 interface BulkImportFormProps {
@@ -17,6 +18,7 @@ export function BulkImportForm({ games, defaultGameId, defaultCategoryId, onSucc
   const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [categoryId, setCategoryId] = useState(defaultCategoryId ?? '');
   const [rawText, setRawText] = useState('');
+  const [defaultIntensity, setDefaultIntensity] = useState<number>(INTENSITY_DEFAULT);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,10 +32,17 @@ export function BulkImportForm({ games, defaultGameId, defaultCategoryId, onSucc
       .catch(() => {});
   }, [selectedGameId, defaultCategoryId]);
 
+  // Chaque ligne : "texte" ou "texte | intensité" (l'intensité par ligne prime sur celle du lot)
   const cards = rawText
     .split('\n')
     .map((l) => l.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((line) => {
+      const match = line.match(/^(.*?)\s*\|\s*([1-5])$/);
+      if (match) return { text: match[1].trim(), intensity: Number(match[2]) };
+      return { text: line, intensity: defaultIntensity };
+    })
+    .filter((c) => c.text.length > 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +52,7 @@ export function BulkImportForm({ games, defaultGameId, defaultCategoryId, onSucc
     try {
       await api.post('/api/admin/bulk-import', {
         categoryId,
-        cards: cards.map((text) => ({ text })),
+        cards,
       });
       onSuccess();
     } catch (err) {
@@ -78,6 +87,22 @@ export function BulkImportForm({ games, defaultGameId, defaultCategoryId, onSucc
       </div>
 
       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Intensité par défaut</label>
+        <select
+          value={defaultIntensity}
+          onChange={(e) => setDefaultIntensity(Number(e.target.value))}
+          className="input"
+        >
+          {INTENSITY_LEVELS.map((level) => (
+            <option key={level} value={level}>{level} — {INTENSITY_LABELS[level]}</option>
+          ))}
+        </select>
+        <p className="text-xs text-gray-500 mt-1">
+          Appliquée aux lignes sans intensité explicite.
+        </p>
+      </div>
+
+      <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Cartes — une par ligne
           {cards.length > 0 && (
@@ -89,8 +114,11 @@ export function BulkImportForm({ games, defaultGameId, defaultCategoryId, onSucc
           onChange={(e) => setRawText(e.target.value)}
           rows={10}
           className="input resize-none font-mono text-xs leading-relaxed"
-          placeholder={"Tu as déjà menti à tes parents sur où tu étais ?\nTu préfères la plage ou la montagne ?"}
+          placeholder={"Tu as déjà menti à tes parents sur où tu étais ? | 2\nTu préfères la plage ou la montagne ?"}
         />
+        <p className="text-xs text-gray-500 mt-1">
+          Ajoutez <code className="bg-gray-100 px-1 rounded">| 1</code> à <code className="bg-gray-100 px-1 rounded">| 5</code> en fin de ligne pour fixer l&apos;intensité d&apos;une carte.
+        </p>
       </div>
 
       <div className="flex justify-end gap-3 pt-2">

@@ -60,13 +60,15 @@ export async function POST(request: NextRequest) {
       const text = row[idx('text')]?.trim();
       if (!categoryId) { errors.push(`Ligne ${lineNum} : categoryId requis`); continue; }
       if (!text) { errors.push(`Ligne ${lineNum} : text requis`); continue; }
-      const rawDiff = headers.includes('difficulty') ? row[idx('difficulty')]?.trim().toLowerCase() : '';
-      const difficulty = rawDiff === 'easy' || rawDiff === 'medium' || rawDiff === 'hard' ? rawDiff : null;
+      const rawIntensity = headers.includes('intensity') ? parseInt(row[idx('intensity')]?.trim()) : NaN;
+      const intensity = Number.isFinite(rawIntensity)
+        ? Math.min(5, Math.max(1, rawIntensity))
+        : 3;
       const id = headers.includes('id') ? row[idx('id')]?.trim() || undefined : undefined;
       upserts.push({
         id,
         data: {
-          categoryId, text, difficulty,
+          categoryId, text, intensity,
           tags: headers.includes('tags') ? row[idx('tags')]?.split('|').map((t) => t.trim()).filter(Boolean) ?? [] : [],
           active: headers.includes('active') ? row[idx('active')]?.trim().toLowerCase() === 'true' : true,
           order: headers.includes('order') ? parseInt(row[idx('order')]) || 0 : 0,

@@ -84,7 +84,7 @@ model Card {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   text       String
-  difficulty String?  // easy | medium | hard
+  intensity  Int      @default(3) // 1 (soft) .. 5 (trash)
   tags       String[]
   active     Boolean  @default(true)
   order      Int      @default(0)

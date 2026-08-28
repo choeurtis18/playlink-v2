@@ -737,7 +737,7 @@ async function main() {
     console.log(`  Game: ${game.name}`);
 
     for (const catData of categories) {
-      const { cards, difficulty, ...catFields } = catData as typeof catData & { difficulty?: string; cards: string[] };
+      const { cards, intensity, ...catFields } = catData as typeof catData & { intensity?: number; cards: string[] };
 
       const category = await prisma.category.upsert({
         where: { gameId_slug: { gameId: game.id, slug: catFields.slug } },
@@ -749,7 +749,7 @@ async function main() {
         const existing = await prisma.card.findFirst({ where: { categoryId: category.id, text: cards[i] } });
         if (!existing) {
           await prisma.card.create({
-            data: { categoryId: category.id, text: cards[i], difficulty: difficulty ?? null, active: true, order: i, tags: [] },
+            data: { categoryId: category.id, text: cards[i], intensity: intensity ?? 3, active: true, order: i, tags: [] },
           });
         }
       }

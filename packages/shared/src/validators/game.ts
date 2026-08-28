@@ -4,7 +4,7 @@ export const CardSchema = z.object({
   id: z.string(),
   categoryId: z.string(),
   text: z.string().min(1),
-  difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+  intensity: z.number().int().min(1).max(5),
   tags: z.array(z.string()).optional(),
   active: z.boolean(),
   order: z.number(),
@@ -54,7 +54,7 @@ export const CreateCategorySchema = z.object({
 export const CreateCardSchema = z.object({
   categoryId: z.string(),
   text: z.string().min(1).max(500),
-  difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+  intensity: z.number().int().min(1).max(5).optional(),
   tags: z.array(z.string()).optional(),
 });
 

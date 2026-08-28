@@ -9,7 +9,7 @@ const BulkImportSchema = z.object({
   categoryId: z.string().min(1),
   cards: z.array(z.object({
     text: z.string().min(1).max(500),
-    difficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+    intensity: z.number().int().min(1).max(5).optional(),
     tags: z.array(z.string()).optional(),
   })).min(1),
 });
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       data: cards.map((c, i) => ({
         categoryId,
         text: c.text,
-        difficulty: c.difficulty,
+        intensity: c.intensity ?? 3,
         tags: c.tags ?? [],
         order: startOrder + i,
       })),

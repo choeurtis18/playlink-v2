@@ -2,7 +2,7 @@ export interface Card {
   id: string;
   categoryId: string;
   text: string;
-  difficulty?: 'easy' | 'medium' | 'hard';
+  intensity: number;
   tags?: string[];
   active: boolean;
   order: number;

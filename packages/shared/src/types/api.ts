@@ -33,7 +33,7 @@ export interface UpdateCategoryPayload extends Partial<Omit<CreateCategoryPayloa
 export interface CreateCardPayload {
   categoryId: string;
   text: string;
-  difficulty?: 'easy' | 'medium' | 'hard';
+  intensity?: number;
   tags?: string[];
 }
 

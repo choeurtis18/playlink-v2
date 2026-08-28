@@ -3,7 +3,8 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
-import type { ExportGame, ExportCategory } from '@/store/gameStore';
+import { INTENSITY_MIN, INTENSITY_MAX, INTENSITY_LABELS } from '@playlink/shared';
+import { useGameStore, type ExportGame, type ExportCategory } from '@/store/gameStore';
 
 interface CategoryPickerProps {
   game: ExportGame;
@@ -47,6 +48,64 @@ function CategoryCard({ cat, game, index, onSelect }: { cat: ExportCategory; gam
   );
 }
 
+function IntensitySlider({ game }: { game: ExportGame }) {
+  const intensity = useGameStore((s) => s.intensityByGame[game.id] ?? 3);
+  const setIntensity = useGameStore((s) => s.setIntensity);
+  const pct = ((intensity - INTENSITY_MIN) / (INTENSITY_MAX - INTENSITY_MIN)) * 100;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-8 rounded-2xl bg-white/5 border border-white/10 px-4 py-4"
+    >
+      <div className="flex items-baseline justify-between mb-3">
+        <span className="text-xs font-semibold tracking-widest text-white/60 uppercase">
+          Intensité
+        </span>
+        <span className="text-sm font-bold text-white">
+          {INTENSITY_LABELS[intensity]}{' '}
+          <span className="text-white/40 font-medium">{intensity}/{INTENSITY_MAX}</span>
+        </span>
+      </div>
+
+      <input
+        type="range"
+        min={INTENSITY_MIN}
+        max={INTENSITY_MAX}
+        step={1}
+        value={intensity}
+        onChange={(e) => setIntensity(game.id, Number(e.target.value))}
+        aria-label="Intensité des cartes"
+        className="w-full h-2 appearance-none rounded-full cursor-pointer accent-white
+          [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
+          [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
+          [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-grab
+          [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:border-0
+          [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white"
+        style={{
+          background: `linear-gradient(to right, ${game.colorMain} 0%, ${game.colorSecondary} ${pct}%, rgba(255,255,255,0.15) ${pct}%, rgba(255,255,255,0.15) 100%)`,
+        }}
+      />
+
+      <div className="flex justify-between mt-2">
+        {Array.from({ length: INTENSITY_MAX - INTENSITY_MIN + 1 }, (_, i) => i + INTENSITY_MIN).map((level) => (
+          <button
+            key={level}
+            type="button"
+            onClick={() => setIntensity(game.id, level)}
+            className={`text-[10px] font-semibold uppercase tracking-wide transition-colors ${
+              level === intensity ? 'text-white' : 'text-white/35 hover:text-white/60'
+            }`}
+          >
+            {INTENSITY_LABELS[level]}
+          </button>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 export function CategoryPicker({ game, onSelect }: CategoryPickerProps) {
   return (
     <main className="flex-1 px-4 py-6 pb-8 bg-gradient-to-b from-indigo-950 via-purple-900 to-indigo-950 relative overflow-hidden">
@@ -61,6 +120,8 @@ export function CategoryPicker({ game, onSelect }: CategoryPickerProps) {
         >
           Choisis ton mode
         </motion.p>
+
+        <IntensitySlider game={game} />
 
         <div className="flex flex-col gap-4">
           {game.categories.map((cat: ExportCategory, i: number) => (

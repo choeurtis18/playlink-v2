@@ -9,16 +9,11 @@ import { Pagination } from '@/components/Pagination';
 import { CardForm } from '@/components/forms/CardForm';
 import { BulkImportForm } from '@/components/forms/BulkImportForm';
 import { CsvImportForm } from '@/components/forms/CsvImportForm';
+import { INTENSITY_LEVELS, INTENSITY_LABELS } from '@playlink/shared';
+import { INTENSITY_CLASS } from '@/lib/intensity';
 import type { AdminGame, AdminCategory, AdminCard, PaginationMeta } from '@/types/admin';
 
 const LIMIT = 20;
-
-const DIFFICULTY_LABEL: Record<string, string> = { easy: 'Facile', medium: 'Moyen', hard: 'Difficile' };
-const DIFFICULTY_CLASS: Record<string, string> = {
-  easy: 'bg-green-100 text-green-700',
-  medium: 'bg-amber-100 text-amber-700',
-  hard: 'bg-red-100 text-red-700',
-};
 
 export default function CardsPage() {
   const [games, setGames] = useState<AdminGame[]>([]);
@@ -28,6 +23,7 @@ export default function CardsPage() {
   const [page, setPage] = useState(1);
   const [filterGameId, setFilterGameId] = useState('');
   const [filterCategoryId, setFilterCategoryId] = useState('');
+  const [filterIntensity, setFilterIntensity] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +56,7 @@ export default function CardsPage() {
       const params = new URLSearchParams({ page: String(page), limit: String(LIMIT) });
       if (filterGameId) params.set('gameId', filterGameId);
       if (filterCategoryId) params.set('categoryId', filterCategoryId);
+      if (filterIntensity) params.set('intensity', filterIntensity);
       if (search) params.set('search', search);
       const res = await api.get<{ data: AdminCard[]; pagination: PaginationMeta }>(`/api/admin/cards?${params}`);
       setCards(res.data.data);
@@ -70,7 +67,7 @@ export default function CardsPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, filterGameId, filterCategoryId, search, refresh]);
+  }, [page, filterGameId, filterCategoryId, filterIntensity, search, refresh]);
 
   useEffect(() => {
     const t = setTimeout(fetchCards, search ? 300 : 0);
@@ -79,6 +76,7 @@ export default function CardsPage() {
 
   const handleFilterGame = (id: string) => { setFilterGameId(id); setPage(1); };
   const handleFilterCategory = (id: string) => { setFilterCategoryId(id); setPage(1); };
+  const handleFilterIntensity = (val: string) => { setFilterIntensity(val); setPage(1); };
   const handleSearch = (val: string) => { setSearch(val); setPage(1); };
 
   const invalidate = () => setRefresh((n) => n + 1);
@@ -202,6 +200,12 @@ export default function CardsPage() {
           <option value="">Toutes les catégories</option>
           {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
+        <select value={filterIntensity} onChange={(e) => handleFilterIntensity(e.target.value)} className="input w-40">
+          <option value="">Toutes intensités</option>
+          {INTENSITY_LEVELS.map((level) => (
+            <option key={level} value={level}>{level} — {INTENSITY_LABELS[level]}</option>
+          ))}
+        </select>
         <div className="relative flex-1 max-w-xs">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input type="text" value={search} onChange={(e) => handleSearch(e.target.value)} placeholder="Rechercher…" className="input pl-8" />
@@ -219,7 +223,7 @@ export default function CardsPage() {
               </th>
               <th className="px-4 py-3 font-medium text-gray-600">Catégorie</th>
               <th className="px-4 py-3 font-medium text-gray-600">Texte</th>
-              <th className="px-4 py-3 font-medium text-gray-600">Difficulté</th>
+              <th className="px-4 py-3 font-medium text-gray-600">Intensité</th>
               <th className="px-4 py-3 font-medium text-gray-600">Tags</th>
               <th className="px-4 py-3 font-medium text-gray-600 text-center">Actif</th>
               <th className="px-4 py-3 font-medium text-gray-600 w-20"></th>
@@ -244,11 +248,9 @@ export default function CardsPage() {
                     <p className="line-clamp-2 text-gray-800">{card.text}</p>
                   </td>
                   <td className="px-4 py-3">
-                    {card.difficulty ? (
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${DIFFICULTY_CLASS[card.difficulty]}`}>
-                        {DIFFICULTY_LABEL[card.difficulty]}
-                      </span>
-                    ) : <span className="text-gray-300">—</span>}
+                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap ${INTENSITY_CLASS[card.intensity]}`}>
+                      {card.intensity} — {INTENSITY_LABELS[card.intensity]}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     {card.tags.length > 0 ? (
@@ -304,8 +306,8 @@ export default function CardsPage() {
           <CsvImportForm
             endpoint="/api/admin/cards/import"
             label="cartes"
-            columns={['id', 'categoryId', 'text', 'difficulty', 'tags', 'active', 'order']}
-            sampleRow={['', 'category-id-ici', "Tu as déjà menti à tes parents sur où tu étais ?", 'easy', 'mensonge|famille', 'true', '1']}
+            columns={['id', 'categoryId', 'text', 'intensity', 'tags', 'active', 'order']}
+            sampleRow={['', 'category-id-ici', "Tu as déjà menti à tes parents sur où tu étais ?", '2', 'mensonge|famille', 'true', '1']}
             onSuccess={handleImportSuccess}
             onCancel={() => setShowImport(false)}
           />
