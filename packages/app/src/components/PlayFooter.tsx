@@ -21,9 +21,9 @@ export function PlayFooter({ game, onReveal, disabled }: PlayFooterProps) {
           whileTap={{ scale: 0.97 }}
           className="w-full py-3 px-6 rounded-2xl text-white font-bold transition-all shadow-lg flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
           style={{ background: game.colorSecondary }}
-          aria-label="Révéler et voter"
+          aria-label="Voter"
         >
-          <span>RÉVÉLER</span>
+          <span>VOTER</span>
           <ChevronRight size={20} />
         </motion.button>
       </div>

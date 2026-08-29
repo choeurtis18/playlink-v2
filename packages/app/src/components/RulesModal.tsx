@@ -48,7 +48,7 @@ export function RulesModal({ slides, gameColors, onClose }: RulesModalProps) {
         exit={{ y: '100%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 32 }}
         className="fixed bottom-0 inset-x-0 z-50 rounded-t-3xl flex flex-col overflow-hidden"
-        style={{ height: '85dvh', background: '#0f0f1a' }}
+        style={{ height: '90dvh', background: '#0f0f1a' }}
       >
         {/* Header */}
         <div

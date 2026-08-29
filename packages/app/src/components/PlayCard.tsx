@@ -42,7 +42,7 @@ function CardFace({ game, category, card }: { game: ExportGame; category: Export
         <p className="text-2xl font-black text-white leading-snug flex items-center justify-center flex-1 text-center py-4">
           {card?.text}
         </p>
-        <p className="text-center text-white text-sm">Swipe ou appuie sur Révéler</p>
+        <p className="text-center text-white text-sm">Swipe ou appuie sur Voter pour voter</p>
       </div>
     </div>
   );
@@ -85,7 +85,8 @@ export function PlayCard({
               />
             ))}
 
-            {/* Peek card (next) — visible behind during drag */}
+            {/* Peek card (next) — visible behind during drag.
+                Le texte reste masqué : il appartient au joueur suivant. */}
             <AnimatePresence>
               {nextCard && (
                 <motion.div
@@ -97,7 +98,7 @@ export function PlayCard({
                   className="absolute inset-0"
                   style={{ zIndex: STACK.length + 1 }}
                 >
-                  <CardFace game={game} category={category} card={nextCard} />
+                  <CardFace game={game} category={category} card={undefined} />
                 </motion.div>
               )}
             </AnimatePresence>

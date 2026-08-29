@@ -10,6 +10,7 @@ import { CategoryPicker } from '@/components/CategoryPicker';
 import { PlayCard } from '@/components/PlayCard';
 import { PlayFooter } from '@/components/PlayFooter';
 import { VoteScreen } from '@/components/VoteScreen';
+import { PassDeviceScreen } from '@/components/PassDeviceScreen';
 import { GameResults } from '@/components/GameResults';
 import { CardGridModal } from '@/components/CardGridModal';
 import { RulesModal, type RuleSlide } from '@/components/RulesModal';
@@ -37,6 +38,7 @@ export default function GamePage({ params }: PageProps) {
   const [showRules, setShowRules] = useState(false);
   const [ruleSlides, setRuleSlides] = useState<RuleSlide[]>([]);
   const [showVote, setShowVote] = useState(false);
+  const [pendingPass, setPendingPass] = useState(false);
   const { track } = useTracking();
   const { appUser, token } = useAuthStore();
   const trackedStartRef = useRef(false);
@@ -186,9 +188,20 @@ export default function GamePage({ params }: PageProps) {
       saveSession(finalScores, finalTagScores);
       endSession();
     } else {
+      // On change de joueur, mais la carte suivante reste masquée par
+      // PassDeviceScreen tant que le nouveau joueur n'a pas confirmé.
       nextPlayer();
-      next();
+      if (players.length > 1) {
+        setPendingPass(true);
+      } else {
+        next();
+      }
     }
+  };
+
+  const handlePassDone = () => {
+    setPendingPass(false);
+    next();
   };
 
   return (
@@ -207,7 +220,7 @@ export default function GamePage({ params }: PageProps) {
         onRulesClick={ruleSlides.length > 0 ? () => setShowRules(true) : undefined}
       />
 
-      {players.length > 1 && currentPlayer && (
+      {players.length > 1 && currentPlayer && !pendingPass && (
         <div className="text-center py-2">
           <p className="text-white font-bold text-lg">🎯 C'est au tour de {currentPlayer.name}</p>
         </div>
@@ -243,7 +256,7 @@ export default function GamePage({ params }: PageProps) {
         )}
       </AnimatePresence>
 
-      {!showVote && (
+      {!showVote && !pendingPass && (
         <PlayFooter
           game={game}
           onReveal={handleReveal}
@@ -269,6 +282,18 @@ export default function GamePage({ params }: PageProps) {
           onClose={() => setShowRules(false)}
         />
       )}
+
+      <AnimatePresence>
+        {pendingPass && currentPlayer && (
+          <PassDeviceScreen
+            key="pass-device"
+            playerName={currentPlayer.name}
+            playerAvatar={currentPlayer.avatar}
+            gameColors={{ colorMain: game.colorMain, colorSecondary: game.colorSecondary }}
+            onReady={handlePassDone}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
