@@ -495,7 +495,7 @@
 
       <h3>Dans la V1</h3>
       <ul class="plain">
-        <li>Les <strong>8 jeux existants</strong> portés à l'identique (Icebreaker, Action ou Vérité, Dégât-Débat, Roland Gamos, Mime Inversé, Devine le Mot, Dilemme, Balance Ton Pote)</li>
+        <li>Les <strong>8 jeux du catalogue actuel</strong> portés à l'identique (Action ou Vérité, Icebreaker, Dégât Débat, Qui de nous, Mime, Thé ou café, Dilemme, Devine le mot)</li>
         <li>Sélection catégorie → réglage d'intensité (1–5) → deck de 10 cartes tirées au poids de l'intensité → swipe → vote → résultats</li>
         <li>Profils joueurs <strong>locaux</strong>, utilisables sans aucun compte</li>
         <li><strong>Compte optionnel</strong> (Clerk) qui débloque : leaderboard entre les profils du compte, badges persistants, sauvegarde cloud</li>
@@ -705,23 +705,37 @@
         <li>10 cartes max par partie, scores jamais reset automatiquement</li>
       </ul>
 
-      <h3>Les 8 jeux (état base au 2026-06-09)</h3>
+      <h3>Les 8 jeux — catalogue réel (export base au 2026-08-29)</h3>
+      <p>Le catalogue a été renouvelé depuis la version précédente de ce document : <strong>Roland Gamos a disparu</strong>, remplacé par une refonte de <strong>Devine le mot</strong> (mécanique « 3 indices max »), et deux jeux ont été renommés avec une nouvelle identité éditoriale (<strong>Balance Ton Pote → Qui de nous</strong>, <strong>Mime Inversé → Mime</strong>). Un jeu totalement nouveau apparaît : <strong>Thé ou café</strong>. Table reconstruite depuis l'export CSV réel des jeux/catégories/cartes.</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Jeu</th><th>Slug</th><th>Couleurs</th><th>Catégories (cartes actives)</th></tr></thead>
+          <thead><tr><th>Jeu</th><th>Slug</th><th>Couleurs</th><th>Catégories</th></tr></thead>
           <tbody>
-            <tr><td>🧊 Icebreaker</td><td><code>icebreaker</code></td><td class="num">#378ADD / #85B7EB</td><td>Pour se découvrir (37), Cœur à Cœur (54), Deep Talk (39)</td></tr>
-            <tr><td>🎯 Action ou Vérité</td><td><code>action-ou-verite</code></td><td class="num">#D4537E / #ED93B1</td><td>Vérités légères (33), Flirt (36), Spicy (30), Actions légères (29), Flirt (27), Spicy (23)</td></tr>
-            <tr><td>⚡ Dégât-Débat</td><td><code>degat-debat</code></td><td class="num">#D85A30 / #F0997B</td><td>Société (38), Perso et Relations (33), Éthique et Morale (35)</td></tr>
-            <tr><td>🎮 Roland Gamos</td><td><code>roland-gamos</code></td><td class="num">#FF6B35 / #FFD60A</td><td>Artistes (49), Sports (70), Acteurs (47), Influenceurs (33)</td></tr>
-            <tr><td>🎭 Mime Inversé</td><td><code>mime-inverse</code></td><td class="num">#E84B8A / #F5A3C7</td><td>Objets du quotidien (25), Actions (25), Métiers (30)</td></tr>
-            <tr><td>🎯 Devine le Mot</td><td><code>devine-le-mot</code></td><td class="num">#8B5CF6 / #C4B5FD</td><td>Facile (39), Moyen (39), Difficile (40)</td></tr>
-            <tr><td>⚖️ Dilemme</td><td><code>dilemme</code></td><td class="num">#0891B2 / #67E8F9</td><td>Absurde et Fun (19), Relations et Société (24), Identité et Valeurs (17)</td></tr>
-            <tr><td>🎤 Balance Ton Pote</td><td><code>balance-ton-pote</code></td><td class="num">#639922 / #97C459</td><td>Personnalité (34), Désir et Attirance (21), Taquineries (26), Secrets (33)</td></tr>
+            <tr><td>🎯 Action ou Vérité</td><td><code>action-ou-verite</code></td><td class="num">#7C3AED / #EC4899</td><td>Vérités légères, Vérités Flirt, Vérités Spicy, Actions Rigolote, Actions Flirt, Actions Spicy</td></tr>
+            <tr><td>🧊 Icebreaker</td><td><code>icebreaker</code></td><td class="num">#0EA5E9 / #06B6D4</td><td>Pour se découvrir, Cœur à Cœur, Deep Talk</td></tr>
+            <tr><td>💥 Dégât Débat</td><td><code>degat-debat</code></td><td class="num">#DC2626 / #F97316</td><td>Société, Perso et Relations, Éthique et Morale</td></tr>
+            <tr><td>🗳️ Qui de nous</td><td><code>qui-de-nous</code></td><td class="num">#059669 / #10B981</td><td>Personnalité, Désir et Attirance, Taquineries, Secrets et Confessions</td></tr>
+            <tr><td>🎭 Mime</td><td><code>mime</code></td><td class="num">#D97706 / #F59E0B</td><td>Objets du quotidien, Actions, Métiers</td></tr>
+            <tr><td>☕ Thé ou café</td><td><code>the-cafe</code></td><td class="num">#7C3AED / #8B5CF6</td><td>Facile, Moyen, Difficile</td></tr>
+            <tr><td>⚖️ Dilemme</td><td><code>dilemme</code></td><td class="num">#1D4ED8 / #3B82F6</td><td>Absurde et Fun, Relations et Sociétés, Identité et Valeurs</td></tr>
+            <tr><td>🕵️ Devine le mot</td><td><code>devine-mot</code></td><td class="num">#BE185D / #EC4899</td><td>Objets et Lieux, Personnages et Culture, Abstrait et Expressions</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Total : 8 jeux, ~40 catégories, ~1 600 cartes actives, 8 jeux de règles. À reconfirmer par le script <code>verify-migration</code>.</p>
+
+      <h4>Mécaniques à confirmer pour le portage</h4>
+      <p>Tes descriptions produit de chaque jeu (message du 5 septembre) donnent l'intention éditoriale. Deux jeux ont une mécanique qui dépasse le simple swipe de carte actuel et méritent une vérification de comportement en phase 2 :</p>
+      <ul class="plain">
+        <li><strong>Qui de nous</strong> — « le groupe désigne, la majorité tranche » : implique un vote collectif sur un joueur désigné, pas un vote binaire oui/non sur une seule personne comme le <code>VoteScreen</code> actuel. À concevoir comme un écran de désignation multi-joueurs.</li>
+        <li><strong>Thé ou café</strong> — mécanique de duel binaire itératif (« thé ou café ? » jusqu'à converger vers le mot) : différente du mime classique, se rapproche d'un jeu de 20 questions à choix binaire forcé. Nouveau composant à concevoir, pas un portage direct de <code>PlayCard</code>.</li>
+        <li><strong>Devine le mot</strong> — mécanique « 3 indices maximum » avec pénalité si un indice est mal choisi : nécessite un compteur d'indices et une logique de fin de tour anticipée, absente du flux swipe actuel.</li>
+        <li><strong>Mime</strong>, <strong>Action ou Vérité</strong>, <strong>Icebreaker</strong>, <strong>Dégât Débat</strong>, <strong>Dilemme</strong> — mécanique de swipe/carte inchangée, portage direct.</li>
+      </ul>
+
+      <div class="note warn">
+        <span class="lbl">Comptes de cartes et catégories</span>
+        <p>Les CSV réels (jeux, catégories, ~1 600+ cartes) ont été fournis mais ne sont pas dénombrés à la main dans ce document — trop volumineux pour un comptage fiable en prose. Le script <code>scripts/verify-migration.ts</code> (§07) doit produire le décompte exact par jeu/catégorie/intensité au moment de l'import, à partir de ces mêmes fichiers.</p>
+      </div>
     </section>
 
     <!-- ============ 03 ============ -->
@@ -1031,7 +1045,7 @@
         </li>
         <li><strong>Images (GIF)</strong> : les 100 assets sont aujourd'hui référencés par URL dans <code>GameRuleSlide.imageUrl</code> (et éventuellement dans le texte des cartes). Script <code>scripts/fetch-assets.ts</code> : télécharge chaque asset, le renomme <code>{hash}.gif</code>, remplit la table <code>assets</code>, réécrit les références en <code>asset://{ref}</code>. Les fichiers vont dans <code>apps/mobile/assets/content/</code> (embarqués) et sur Vercel Blob (OTA).</li>
         <li><strong>Import dans Neon</strong> via <code>prisma db seed</code> pointant sur le script. <strong>Jamais</strong> <code>prisma migrate dev</code> sur une base contenant des données (même règle que le repo actuel).</li>
-        <li><strong>Vérification</strong> : script <code>scripts/verify-migration.ts</code> qui compte lignes source vs cible par table et liste les écarts. On vise 8 jeux, ~1 600 cartes actives, ~40 catégories, 8 jeux de règles.</li>
+        <li><strong>Vérification</strong> : script <code>scripts/verify-migration.ts</code> qui compte lignes source vs cible par table et liste les écarts — 8 jeux, 28 catégories, et le total exact de cartes actives calculé depuis l'export réel (§02), pas estimé.</li>
         <li><strong>Première</strong> <code>ContentRelease</code> <strong>version 1</strong> générée → snapshot embarqué dans le premier build de l'app.</li>
       </ol>
 
@@ -1144,8 +1158,8 @@ crons: [
           <title id="visuel-title">Trois écrans illustrant fond sombre, scale+glow, et transition Hero vers l'écran de jeu</title>
           <defs>
             <linearGradient id="tileGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#D4537E"/>
-              <stop offset="100%" stop-color="#ED93B1"/>
+              <stop offset="0%" stop-color="#7C3AED"/>
+              <stop offset="100%" stop-color="#EC4899"/>
             </linearGradient>
             <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="8" result="blur"/>
@@ -1191,7 +1205,7 @@ crons: [
             </g>
           </g>
         </svg>
-        <figcaption>Le dégradé de chaque jeu (ici Action ou Vérité, #D4537E → #ED93B1) reste l'accent vif ; tout le reste bascule au sombre.</figcaption>
+        <figcaption>Le dégradé de chaque jeu (ici Action ou Vérité, #7C3AED → #EC4899) reste l'accent vif ; tout le reste bascule au sombre.</figcaption>
       </figure>
 
       <div class="note">
