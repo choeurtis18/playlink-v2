@@ -1,6 +1,6 @@
 // Rend les slides de règles en fichiers prêts à uploader dans le back-office.
 // Usage : node docs/rules-assets/render.mjs <jeu> [--main=#hex] [--secondary=#hex] [--safe]
-// Les .html contenant des @keyframes sont exportés en MP4 (boucle 4 s), les autres en WebP.
+// Les .html contenant des @keyframes sont exportés en WebP animé (+ MP4), les autres en WebP.
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
@@ -44,8 +44,10 @@ for (const file of readdirSync(srcDir).filter((f) => f.endsWith('.html')).sort()
     execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-i', join(frames, '%04d.png'),
       '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '30', '-preset', 'slow', '-movflags', '+faststart', '-an',
       join(outDir, `${name}.mp4`)]);
-    // Image fixe de secours (aperçu / poster)
-    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(frames, `${String(Math.round(FPS * duration * 0.4)).padStart(4, '0')}.png`), '-quality', '85', join(outDir, `${name}.webp`)]);
+    // WebP animé : format accepté par le back-office (PNG, JPG, GIF, WebP — 4 Mo max)
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(outDir, `${name}.mp4`),
+      '-vf', 'fps=24', '-c:v', 'libwebp_anim', '-loop', '0', '-quality', '75', '-compression_level', '6',
+      join(outDir, `${name}.webp`)]);
     rmSync(frames, { recursive: true });
   }
   console.log('✓', name);
