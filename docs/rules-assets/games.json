@@ -23,5 +23,9 @@
   "the-ou-cafe": {
     "main": "#7C3AED",
     "secondary": "#E84A9A"
+  },
+  "dilemme": {
+    "main": "#6B7280",
+    "secondary": "#374151"
   }
 }
