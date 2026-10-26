@@ -27,5 +27,9 @@
   "dilemme": {
     "main": "#6B7280",
     "secondary": "#374151"
+  },
+  "devine-mot": {
+    "main": "#be185d",
+    "secondary": "#580b2b"
   }
 }

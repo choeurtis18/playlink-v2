@@ -1,0 +1,30 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="../../lib/base.css"><script src="../../lib/boot.js"></script><style>
+/* 6 s : mot secret, chrono 1 min qui tourne, indices 1 et 2, le groupe trouve */
+.stage>*{position:absolute}
+.secret{top:150px;font-size:30px;font-weight:900;letter-spacing:3px;padding:12px 26px;border-radius:999px;background:var(--ink);border:3px solid var(--main)}
+.timer{width:150px;height:150px;transform:translate(-330px,-40px)}
+.timer circle{fill:none;stroke-width:14}
+.timer .bg{stroke:rgba(255,255,255,.12)} .timer .fg{stroke:var(--main);stroke-dasharray:408;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;animation:t 6s infinite linear}
+@keyframes t{0%{stroke-dashoffset:0}62%,100%{stroke-dashoffset:200}}
+.tlabel{transform:translate(-330px,-40px);font-size:30px;font-weight:900}
+.slots{transform:translate(-330px,90px);display:flex;gap:10px}
+.slots i{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.5)}
+.slots i:nth-child(1){animation:s1 6s infinite} .slots i:nth-child(2){animation:s2 6s infinite}
+@keyframes s1{0%,12%{background:none}16%,100%{background:#fff}}
+@keyframes s2{0%,34%{background:none}38%,100%{background:#fff}}
+.clue{font-size:34px;font-weight:800;padding:20px 28px;border-radius:28px 28px 28px 8px;background:rgba(20,20,36,.92);border:2px solid rgba(255,255,255,.12);opacity:0}
+.clue b{color:color-mix(in srgb,var(--main) 55%,#fff)}
+.c1{transform:translate(110px,-60px);animation:c1 6s infinite} .c2{transform:translate(110px,40px);animation:c2 6s infinite}
+@keyframes c1{0%,12%{opacity:0}17%,94%{opacity:1}100%{opacity:0}}
+@keyframes c2{0%,34%{opacity:0}39%,94%{opacity:1}100%{opacity:0}}
+.win{transform:translate(110px,170px);font-size:36px;font-weight:900;padding:20px 30px;border-radius:28px 28px 8px 28px;background:#16A34A;opacity:0;animation:w 6s infinite}
+@keyframes w{0%,56%{opacity:0;transform:translate(110px,190px) scale(.6)}62%,94%{opacity:1;transform:translate(110px,170px)}100%{opacity:0}}
+</style></head><body data-duration="6"><div class="stage">
+<div class="secret">🕵️ MOT SECRET</div>
+<svg class="timer" viewBox="0 0 150 150"><circle class="bg" cx="75" cy="75" r="65"/><circle class="fg" cx="75" cy="75" r="65"/></svg>
+<div class="tlabel">1:00</div>
+<div class="slots"><i></i><i></i><i></i></div>
+<div class="clue c1"><b>Indice 1</b> · Noir et blanc</div>
+<div class="clue c2"><b>Indice 2</b> · Mange du bambou</div>
+<div class="win">« Un panda ! » ✓ 🎉</div>
+</div></body></html>
