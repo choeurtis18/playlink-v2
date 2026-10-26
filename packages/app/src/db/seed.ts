@@ -771,26 +771,14 @@ async function main() {
     const game = await prisma.game.findUnique({ where: { slug: gameSlug } });
     if (game) {
       for (const slide of slides) {
+        // Upsert sur l'id réel du back-office : un re-seed met à jour sans créer de doublon.
         await prisma.gameRuleSlide.upsert({
-          where: {
-            id: `${game.id}-slide-${slide.order}`,
-          },
-          update: {
-            title: slide.title,
-            content: slide.content,
-            imageUrl: slide.imageUrl || null,
-          },
-          create: {
-            id: `${game.id}-slide-${slide.order}`,
-            gameId: game.id,
-            order: slide.order,
-            title: slide.title,
-            content: slide.content,
-            imageUrl: slide.imageUrl || null,
-          },
+          where: { id: slide.id },
+          update: { order: slide.order, title: slide.title, content: slide.content, imageUrl: slide.imageUrl },
+          create: { ...slide, gameId: game.id },
         });
       }
-      console.log(`  Rule slides created for: ${game.name}`);
+      console.log(`  Rule slides synced for: ${game.name}`);
     }
   }
 

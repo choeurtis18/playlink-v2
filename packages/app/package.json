@@ -8,6 +8,7 @@
     "build": "next build",
     "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
+    "db:export-slides": "tsx prisma/export-rule-slides.ts",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
