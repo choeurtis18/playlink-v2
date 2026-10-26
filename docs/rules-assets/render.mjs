@@ -14,7 +14,6 @@ if (!game) throw new Error('Usage : node render.mjs <jeu> [--main=#hex] [--secon
 const opts = Object.fromEntries(flags.map((f) => f.replace(/^--/, '').split('=')).map(([k, v]) => [k, v ?? '1']));
 
 const FPS = 30;
-const DURATION = 4;
 const srcDir = join(root, 'slides', game);
 const outDir = join(root, 'out', game);
 mkdirSync(outDir, { recursive: true });
@@ -35,9 +34,10 @@ for (const file of readdirSync(srcDir).filter((f) => f.endsWith('.html')).sort()
     execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', png, '-quality', '85', join(outDir, `${name}.webp`)]);
     rmSync(png);
   } else {
+    const duration = Number(await page.evaluate(() => document.body.dataset.duration ?? 4));
     const frames = join(outDir, `.${name}-frames`);
     mkdirSync(frames, { recursive: true });
-    for (let i = 0; i < FPS * DURATION; i++) {
+    for (let i = 0; i < FPS * duration; i++) {
       await page.evaluate((t) => document.getAnimations().forEach((a) => { a.pause(); a.currentTime = t; }), (i * 1000) / FPS);
       await page.screenshot({ path: join(frames, `${String(i).padStart(4, '0')}.png`) });
     }
@@ -45,7 +45,7 @@ for (const file of readdirSync(srcDir).filter((f) => f.endsWith('.html')).sort()
       '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '30', '-preset', 'slow', '-movflags', '+faststart', '-an',
       join(outDir, `${name}.mp4`)]);
     // Image fixe de secours (aperçu / poster)
-    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(frames, '0045.png'), '-quality', '85', join(outDir, `${name}.webp`)]);
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(frames, `${String(Math.round(FPS * duration * 0.4)).padStart(4, '0')}.png`), '-quality', '85', join(outDir, `${name}.webp`)]);
     rmSync(frames, { recursive: true });
   }
   console.log('✓', name);

@@ -1,24 +1,81 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="../../lib/base.css"><script src="../../lib/boot.js"></script><style>
-/* Animation 4 s en boucle : la carte se retourne, on la lit, swipe → carte suivante */
-.stage>*{position:absolute}
-.deck{width:260px;height:360px}
-.deck .card{position:absolute;inset:0}
-.d1{transform:translate(14px,14px) rotate(4deg)} .d2{transform:translate(7px,7px) rotate(2deg)}
-.top{position:absolute;inset:0;perspective:1400px;animation:swipe 4s infinite ease-in}
-.flip{position:absolute;inset:0;transform-style:preserve-3d;animation:flip 4s infinite ease-in-out}
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="../../lib/base.css"><script src="../../lib/boot.js"></script>
+<style>
+/* Animation 10 s en boucle — 4 étapes : nom du joueur → il répond → le groupe vote → joueur suivant */
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;opacity:0}
+.sc1{animation:sc1 10s infinite} .sc2{animation:sc2 10s infinite} .sc3{animation:sc3 10s infinite} .sc4{animation:sc4 10s infinite}
+@keyframes sc1{0%{opacity:0}3%,21%{opacity:1}24%,100%{opacity:0}}
+@keyframes sc2{0%,22%{opacity:0}25%,49%{opacity:1}52%,100%{opacity:0}}
+@keyframes sc3{0%,50%{opacity:0}53%,76%{opacity:1}79%,100%{opacity:0}}
+@keyframes sc4{0%,77%{opacity:0}80%,96%{opacity:1}100%{opacity:0}}
+
+/* Étape indicateur (1 → 4) */
+.steps{position:absolute;top:150px;left:50%;transform:translateX(-50%);display:flex;gap:14px}
+.steps i{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.2)}
+.steps i:nth-child(1){animation:st1 10s infinite} .steps i:nth-child(2){animation:st2 10s infinite}
+.steps i:nth-child(3){animation:st3 10s infinite} .steps i:nth-child(4){animation:st4 10s infinite}
+@keyframes st1{0%,23%{background:#fff}24%,100%{background:rgba(255,255,255,.2)}}
+@keyframes st2{0%,23%{background:rgba(255,255,255,.2)}24%,51%{background:#fff}52%,100%{background:rgba(255,255,255,.2)}}
+@keyframes st3{0%,51%{background:rgba(255,255,255,.2)}52%,78%{background:#fff}79%,100%{background:rgba(255,255,255,.2)}}
+@keyframes st4{0%,78%{background:rgba(255,255,255,.2)}79%,100%{background:#fff}}
+
+/* 1 & 4 — au tour de… */
+.avatar{width:170px;height:170px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:100px;
+  background:linear-gradient(135deg,var(--main),var(--secondary));box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.name{font-size:96px;font-weight:900;line-height:1}
+.sc1 .avatar,.sc1 .name{animation:pop 10s infinite}
+@keyframes pop{0%{transform:scale(.6)}5%{transform:scale(1.08)}8%,100%{transform:scale(1)}}
+.sc4 .who{animation:slide 10s infinite;display:flex;flex-direction:column;align-items:center;gap:26px}
+@keyframes slide{0%,77%{transform:translateX(500px)}83%,100%{transform:none}}
+
+/* 2 — il répond */
+.chip{display:flex;align-items:center;gap:12px;padding:10px 24px 10px 12px;border-radius:999px;background:rgba(20,20,36,.92);
+  border:2px solid rgba(255,255,255,.1);font-size:30px;font-weight:800}
+.chip span{font-size:40px}
+.flipwrap{width:260px;height:360px;perspective:1400px;position:relative}
+.flip{position:absolute;inset:0;transform-style:preserve-3d;animation:flip 10s infinite ease-in-out}
 .flip .card{position:absolute;inset:0;backface-visibility:hidden}
 .flip .front{transform:rotateY(180deg)}
-.hand{font-size:110px;z-index:3;animation:hand 4s infinite ease-in-out;opacity:0}
-@keyframes flip{0%,8%{transform:rotateY(0)}25%,100%{transform:rotateY(180deg)}}
-@keyframes swipe{0%,62%{transform:none;opacity:1}82%{transform:translateX(-620px) rotate(-22deg);opacity:1}83%,92%{opacity:0;transform:none}100%{opacity:1;transform:none}}
-@keyframes hand{0%,48%{opacity:0;transform:translate(90px,320px)}56%,62%{opacity:1;transform:translate(70px,230px)}82%{opacity:1;transform:translate(-420px,250px)}90%,100%{opacity:0;transform:translate(-420px,250px)}}
-</style></head><body><div class="stage">
-<div class="deck">
-<div class="card is-back d1"></div><div class="card is-back d2"></div>
-<div class="top"><div class="flip">
-<div class="card is-back"></div>
-<div class="card front"><span class="tag">VÉRITÉ</span><span class="txt">Quel est ton plus gros mensonge cette semaine ?</span></div>
-</div></div>
+@keyframes flip{0%,26%{transform:rotateY(0)}32%,100%{transform:rotateY(180deg)}}
+.bubble{position:absolute;left:170px;bottom:-60px;white-space:nowrap;background:#fff;color:var(--ink);font-size:34px;font-weight:800;
+  padding:18px 26px;border-radius:30px 30px 30px 6px;box-shadow:0 14px 30px rgba(0,0,0,.4);opacity:0;animation:bub 10s infinite}
+@keyframes bub{0%,35%{opacity:0;transform:scale(.6)}38%,100%{opacity:1;transform:none}}
+
+/* 3 — le groupe vote */
+.votes{display:flex;gap:36px}
+.vote{width:250px;height:190px;border-radius:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  font-size:30px;font-weight:800;background:rgba(20,20,36,.92);border:3px solid rgba(255,255,255,.1)}
+.vote span{font-size:80px;line-height:1}
+.vote.yes{animation:yes 10s infinite}
+@keyframes yes{0%,62%{background:rgba(20,20,36,.92);border-color:rgba(255,255,255,.1);transform:none}
+  64%{transform:scale(.94)}66%,100%{background:#16A34A;border-color:#22C55E;transform:none}}
+.hand{position:absolute;font-size:100px;left:420px;top:560px;animation:hand 10s infinite}
+@keyframes hand{0%,54%{transform:translate(120px,120px);opacity:0}58%{opacity:1}62%,64%{transform:none;opacity:1}70%,100%{transform:translate(0,40px);opacity:0}}
+.plus{position:absolute;top:210px;font-size:54px;font-weight:900;color:#22C55E;opacity:0;animation:plus 10s infinite}
+@keyframes plus{0%,65%{opacity:0;transform:translateY(30px) scale(.7)}69%,100%{opacity:1;transform:none}}
+.score{position:absolute;bottom:150px}
+</style></head><body data-duration="10"><div class="stage">
+<div class="steps"><i></i><i></i><i></i><i></i></div>
+
+<div class="scene sc1"><div class="label">Au tour de</div><div class="avatar">🙋‍♀️</div><div class="name">Léa</div></div>
+
+<div class="scene sc2">
+  <div class="chip"><span>🙋‍♀️</span>Léa</div>
+  <div class="flipwrap"><div class="flip">
+    <div class="card is-back"></div>
+    <div class="card front"><span class="tag">VÉRITÉ</span><span class="txt">Quel est ton plus gros mensonge cette semaine ?</span></div>
+  </div><div class="bubble">Alors… 😅</div></div>
 </div>
-<div class="hand">👆</div>
+
+<div class="scene sc3">
+  <div class="plus">+1 point</div>
+  <div class="label">Le groupe vote</div>
+  <div class="votes">
+    <div class="vote yes"><span>👍</span>Mérité</div>
+    <div class="vote"><span>👎</span>Pas mérité</div>
+  </div>
+  <div class="hand">👆</div>
+  <div class="chip score"><span>🙋‍♀️</span>Léa · 1 pt</div>
+</div>
+
+<div class="scene sc4"><div class="label">Joueur suivant</div><div class="who"><div class="avatar">🙋‍♂️</div><div class="name">Tom</div></div></div>
 </div></body></html>
