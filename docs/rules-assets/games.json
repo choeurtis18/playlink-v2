@@ -1,5 +1,15 @@
 {
   "_comment": "Couleurs des jeux relevées sur l'app en prod (approximatives, à remplacer par les valeurs du back-office).",
-  "action-ou-verite": { "main": "#DC2626", "secondary": "#7F1D1D" },
-  "icebreaker": { "main": "#22B0F0", "secondary": "#1A6E9E" }
+  "action-ou-verite": {
+    "main": "#DC2626",
+    "secondary": "#7F1D1D"
+  },
+  "icebreaker": {
+    "main": "#22B0F0",
+    "secondary": "#1A6E9E"
+  },
+  "degat-debat": {
+    "main": "#F47A1A",
+    "secondary": "#8F4410"
+  }
 }
