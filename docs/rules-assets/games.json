@@ -19,5 +19,9 @@
   "mime": {
     "main": "#F5A30F",
     "secondary": "#2272C8"
+  },
+  "the-ou-cafe": {
+    "main": "#7C3AED",
+    "secondary": "#E84A9A"
   }
 }
