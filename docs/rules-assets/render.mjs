@@ -1,6 +1,7 @@
 // Rend les slides de règles en fichiers prêts à uploader dans le back-office.
 // Usage : node docs/rules-assets/render.mjs <jeu> [--main=#hex] [--secondary=#hex] [--safe]
-// Les .html contenant des @keyframes sont exportés en WebP animé (+ MP4), les autres en WebP.
+// Couleurs par défaut : games.json.
+// Les scènes animées (CSS) sont exportés en WebP animé (+ MP4), les autres en WebP.
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
@@ -18,6 +19,8 @@ const srcDir = join(root, 'slides', game);
 const outDir = join(root, 'out', game);
 mkdirSync(outDir, { recursive: true });
 
+const defaults = JSON.parse(readFileSync(join(root, 'games.json'), 'utf8'))[game] ?? {};
+for (const k of ['main', 'secondary']) opts[k] ??= defaults[k];
 const query = new URLSearchParams(Object.fromEntries(['main', 'secondary', 'safe'].filter((k) => opts[k]).map((k) => [k, opts[k]])));
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
@@ -26,7 +29,7 @@ for (const file of readdirSync(srcDir).filter((f) => f.endsWith('.html')).sort()
   const name = file.replace(/\.html$/, '');
   await page.goto(`${pathToFileURL(join(srcDir, file))}?${query}`);
   await page.evaluate(() => document.fonts.ready);
-  const animated = readFileSync(join(srcDir, file), 'utf8').includes('@keyframes');
+  const animated = await page.evaluate(() => document.getAnimations().length > 0);
 
   if (!animated) {
     const png = join(outDir, `${name}.png`);

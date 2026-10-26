@@ -1,0 +1,22 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="../../lib/base.css"><script src="../../lib/boot.js"></script><style>
+/* 5 s : le glaçon tremble, se fissure, éclate → une bulle de discussion apparaît */
+.stage>*{position:absolute}
+.ice{font-size:300px;line-height:1;animation:ice 5s infinite}
+@keyframes ice{0%,8%{transform:none;opacity:1}12%,20%,28%{transform:rotate(-5deg)}16%,24%,32%{transform:rotate(5deg)}36%{transform:scale(1.1);opacity:1}42%,100%{transform:scale(1.5);opacity:0}}
+.crack{width:300px;height:300px;opacity:0;animation:crack 5s infinite}
+@keyframes crack{0%,18%{opacity:0}22%,38%{opacity:1}42%,100%{opacity:0}}
+.shard{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#e0f6ff,color-mix(in srgb,var(--main) 60%,#fff));opacity:0}
+.shard{animation:shard 5s infinite}
+@keyframes shard{0%,37%{opacity:0;transform:none}40%{opacity:1}60%,100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(200deg)}}
+.bubble{background:#fff;color:var(--ink);font-size:52px;font-weight:900;padding:36px 54px;border-radius:60px 60px 60px 14px;
+  box-shadow:0 30px 60px rgba(0,0,0,.45);opacity:0;animation:bub 5s infinite}
+@keyframes bub{0%,42%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.08)}54%,92%{opacity:1;transform:none}100%{opacity:0}}
+.bubble small{display:block;font-size:30px;font-weight:700;color:var(--secondary);margin-top:8px}
+</style></head><body data-duration="5"><div class="stage">
+<div class="ice">🧊</div>
+<svg class="crack" viewBox="0 0 300 300"><path d="M150 30 L135 110 L170 150 L130 200 L160 270 M135 110 L80 130 M170 150 L230 140" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/></svg>
+<div class="shard" style="--x:-330px;--y:-200px"></div><div class="shard" style="--x:340px;--y:-180px"></div>
+<div class="shard" style="--x:-300px;--y:220px"></div><div class="shard" style="--x:320px;--y:230px"></div>
+<div class="shard" style="--x:0px;--y:-300px"></div><div class="shard" style="--x:-40px;--y:310px"></div>
+<div class="bubble">Et toi, vraiment ? 💬<small>Fini le « ça va et toi ? »</small></div>
+</div></body></html>
