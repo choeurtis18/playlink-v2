@@ -1,0 +1,35 @@
+{
+  "_comment": "Couleurs des jeux relevées sur l'app en prod (approximatives, à remplacer par les valeurs du back-office).",
+  "action-ou-verite": {
+    "main": "#DC2626",
+    "secondary": "#7F1D1D"
+  },
+  "icebreaker": {
+    "main": "#22B0F0",
+    "secondary": "#1A6E9E"
+  },
+  "degat-debat": {
+    "main": "#F47A1A",
+    "secondary": "#8F4410"
+  },
+  "qui-de-nous": {
+    "main": "#12B886",
+    "secondary": "#0B5E40"
+  },
+  "mime": {
+    "main": "#F5A30F",
+    "secondary": "#2272C8"
+  },
+  "the-ou-cafe": {
+    "main": "#7C3AED",
+    "secondary": "#E84A9A"
+  },
+  "dilemme": {
+    "main": "#6B7280",
+    "secondary": "#374151"
+  },
+  "devine-mot": {
+    "main": "#be185d",
+    "secondary": "#580b2b"
+  }
+}

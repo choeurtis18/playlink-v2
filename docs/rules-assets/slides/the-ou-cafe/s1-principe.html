@@ -1,0 +1,20 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="../../lib/base.css"><script src="../../lib/boot.js"></script><style>
+/* 6 s : la chaîne Thé ou café → … → mot trouvé */
+.col{display:flex;flex-direction:column;gap:20px;align-items:center}
+.secret{font-size:26px;font-weight:800;padding:10px 22px;border-radius:999px;background:var(--ink);border:3px solid var(--main);margin-bottom:6px}
+.row{display:flex;align-items:center;gap:18px;opacity:0}
+.q{font-size:34px;font-weight:800;padding:16px 26px;border-radius:26px 26px 26px 8px;background:rgba(20,20,36,.92);border:2px solid rgba(255,255,255,.12)}
+.a{font-size:34px;font-weight:900;padding:16px 26px;border-radius:26px 26px 8px 26px;background:linear-gradient(135deg,var(--main),var(--secondary))}
+.r1{animation:r1 6s infinite} .r2{animation:r2 6s infinite} .r3{animation:r3 6s infinite} .win{animation:r4 6s infinite}
+@keyframes r1{0%,4%{opacity:0;transform:translateY(20px)}10%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes r2{0%,22%{opacity:0;transform:translateY(20px)}28%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes r3{0%,40%{opacity:0;transform:translateY(20px)}46%,94%{opacity:1;transform:none}100%{opacity:0}}
+@keyframes r4{0%,60%{opacity:0;transform:scale(.6)}68%{opacity:1;transform:scale(1.08)}72%,94%{opacity:1;transform:none}100%{opacity:0}}
+.win .q{background:#16A34A;border-color:#22C55E}
+</style></head><body data-duration="6"><div class="stage"><div class="col">
+<div class="secret">🤫 Mot secret : ••••••</div>
+<div class="row r1"><div class="q">Thé ou café ?</div><div class="a">Café</div></div>
+<div class="row r2"><div class="q">Café ou voiture ?</div><div class="a">Voiture</div></div>
+<div class="row r3"><div class="q">Voiture ou vélo ?</div><div class="a">Vélo</div></div>
+<div class="row win"><div class="q">C'est une trottinette ? ✓</div><div class="a">🎉</div></div>
+</div></div></body></html>

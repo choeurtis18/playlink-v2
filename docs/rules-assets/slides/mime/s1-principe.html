@@ -1,0 +1,22 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="../../lib/base.css"><script src="../../lib/boot.js"></script><style>
+/* 5 s : le mime ne dit rien, le groupe propose, mauvaise réponse ✗ puis bonne réponse ✓ */
+.stage>*{position:absolute}
+.mime{font-size:200px;line-height:1;animation:mime 5s infinite}
+@keyframes mime{0%,100%{transform:none}10%{transform:rotate(-10deg) translateY(-10px)}20%{transform:rotate(10deg)}30%{transform:rotate(-6deg) translateY(-6px)}40%{transform:none}}
+.tag{top:190px;font-size:30px;font-weight:900;letter-spacing:4px;padding:10px 24px;border-radius:999px;background:var(--ink);border:3px solid var(--main)}
+.g{font-size:34px;font-weight:800;padding:22px 30px;border-radius:30px;background:#fff;color:var(--ink);box-shadow:0 14px 30px rgba(0,0,0,.4);display:flex;align-items:center;gap:14px;opacity:0}
+.g i{font-style:normal;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px}
+.g1{transform:translate(-250px,210px);border-bottom-right-radius:8px;animation:g1 5s infinite}
+.g2{transform:translate(250px,210px);border-bottom-left-radius:8px;animation:g2 5s infinite}
+.g1 i{background:#EF4444} .g2 i{background:#22C55E}
+@keyframes g1{0%,18%{opacity:0}24%,92%{opacity:1}100%{opacity:0}}
+@keyframes g2{0%,44%{opacity:0;transform:translate(250px,230px) scale(.6)}52%,92%{opacity:1;transform:translate(250px,210px)}100%{opacity:0}}
+.party{font-size:80px;transform:translate(330px,80px);opacity:0;animation:party 5s infinite}
+@keyframes party{0%,54%{opacity:0;transform:translate(330px,120px) scale(.4)}62%,92%{opacity:1;transform:translate(330px,80px)}100%{opacity:0}}
+</style></head><body data-duration="5"><div class="stage">
+<div class="tag">🤐 PAS UN MOT</div>
+<div class="mime">🧍</div>
+<div class="g g1">Un téléphone ? <i>✗</i></div>
+<div class="g g2">Une brosse à dents ! <i>✓</i></div>
+<div class="party">🎉</div>
+</div></body></html>

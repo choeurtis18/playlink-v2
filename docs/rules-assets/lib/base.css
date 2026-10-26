@@ -1,0 +1,93 @@
+/*
+ * Playlink — bibliothèque d'assets des slides de règles.
+ * Format : 1200×900 (4:3). Zone sûre : 70 % central (le slider rogne en object-cover).
+ * Couleurs du jeu injectées via ?main=&secondary= (voir render.mjs).
+ */
+:root {
+  --main: #DC2626;
+  --secondary: #7F1D1D;
+  --bg: #0f0f1a;
+  --ink: #0f0f1a;
+  --paper: #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { width: 1200px; height: 900px; overflow: hidden; }
+
+body {
+  font-family: 'Inter', -apple-system, 'Segoe UI', Arial, sans-serif;
+  color: #fff;
+  /* Fond C — sombre + halo à la couleur du jeu */
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--main) 55%, transparent), var(--bg) 65%);
+  position: relative;
+}
+
+/* Zone sûre (debug : ajouter ?safe=1) */
+body.safe::after {
+  content: ''; position: absolute; inset: 135px 180px;
+  border: 3px dashed #0f0; pointer-events: none;
+}
+
+.stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+
+/* ── Carte de jeu ───────────────────────────────── */
+.card {
+  width: 260px; height: 360px; border-radius: 28px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  font-weight: 900; font-size: 40px; letter-spacing: 2px; text-align: center;
+  box-shadow: 0 30px 60px rgba(0,0,0,.5);
+  background: var(--paper); color: var(--main);
+}
+.card .ico { font-size: 96px; line-height: 1; }
+.card.is-main { background: linear-gradient(135deg, var(--main), var(--secondary)); color: #fff; }
+.card.is-dark { background: var(--ink); color: #fff; border: 4px solid var(--main); }
+.card.is-back {
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.12) 0 3px, transparent 3px 26px),
+    linear-gradient(135deg, var(--main), var(--secondary));
+}
+.card .txt { font-size: 26px; font-weight: 700; letter-spacing: 0; line-height: 1.3; padding: 0 26px; color: var(--ink); }
+.card .tag { font-size: 22px; letter-spacing: 3px; padding: 8px 18px; border-radius: 999px; background: var(--main); color: #fff; }
+
+/* ── Pastille ronde (OU, VS, chiffres…) ─────────── */
+.badge {
+  width: 120px; height: 120px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 38px;
+  background: var(--ink); color: #fff; border: 5px solid var(--main);
+  box-shadow: 0 16px 40px rgba(0,0,0,.5);
+}
+
+/* ── Pilule catégorie ───────────────────────────── */
+.pill {
+  display: flex; align-items: center; gap: 18px;
+  height: 92px; padding: 0 30px 0 14px; border-radius: 26px;
+  background: rgba(20,20,36,.92); border: 2px solid rgba(255,255,255,.08);
+  font-size: 32px; font-weight: 800; box-shadow: 0 14px 30px rgba(0,0,0,.35);
+}
+.pill .em {
+  width: 64px; height: 64px; border-radius: 18px; background: rgba(255,255,255,.06);
+  display: flex; align-items: center; justify-content: center; font-size: 38px;
+}
+
+/* ── Tuile règle (✅ / ❌) ───────────────────────── */
+.tile {
+  width: 250px; height: 280px; border-radius: 30px;
+  background: rgba(20,20,36,.92); border: 2px solid rgba(255,255,255,.08);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  text-align: center; font-size: 28px; font-weight: 800; line-height: 1.2; padding: 0 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.4); position: relative;
+}
+.tile .ico { font-size: 92px; line-height: 1; }
+.tile .mark {
+  position: absolute; top: -22px; right: -22px; width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 900;
+}
+.tile .mark.ok { background: #22C55E; }
+.tile .mark.no { background: #EF4444; }
+
+.label {
+  font-size: 30px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase;
+  color: color-mix(in srgb, var(--main) 35%, #fff);
+}
