@@ -15,5 +15,9 @@
   "qui-de-nous": {
     "main": "#12B886",
     "secondary": "#0B5E40"
+  },
+  "mime": {
+    "main": "#F5A30F",
+    "secondary": "#2272C8"
   }
 }
