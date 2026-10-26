@@ -11,5 +11,9 @@
   "degat-debat": {
     "main": "#F47A1A",
     "secondary": "#8F4410"
+  },
+  "qui-de-nous": {
+    "main": "#12B886",
+    "secondary": "#0B5E40"
   }
 }
