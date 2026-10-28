@@ -47,7 +47,7 @@ Logo en éventail de 4 cartes + « **Playlink** » + « **Disponible sur iOS et 
 ### Cartes à utiliser (à prendre dans le back-office)
 Les scripts utilisent des cartes d'exemple du code. Pour la version finale, remplacer par de **vraies cartes d'intensité 4-5** (idéalement 2 par jeu), à exporter du back-office en CSV filtré sur l'intensité :
 
-| Script | Carte(s) à fournir |
+| Script | Carte(s) à utiliser |
 |---|---|
 | Soirée, Couple | 1 carte *Qui de nous* intensité 5 (hook flouté + révélation) |
 | Couple | 1 carte *Icebreaker* (Cœur à Cœur, 3), 1 carte *Dégât Débat* (Perso et Relations, 4-5) |
@@ -94,8 +94,8 @@ Les scripts utilisent des cartes d'exemple du code. Pour la version finale, remp
 |---|---|---|---|
 | 0–3 s | **Hook** : carte *Qui de nous* floutée, « Qui de nous deux… ████████ ? », 5 points allumés, bip. Deux avatars se lisent la carte et se regardent. | `INTENSITÉ 5 · À DEUX` | *(voix basse)* « Intensité **cinq.** À deux. » |
 | 3–7 s | Canapé stylisé, deux avatars, un téléphone entre eux, côté écran. | `2 JOUEURS · 1 TÉLÉPHONE` | « Pas besoin d'être dix. **Deux suffisent.** » |
-| 7–12 s | **Icebreaker** : carte *Cœur à Cœur* (à fournir, intensité 3). Ils répondent chacun leur tour, sourires. | `ICEBREAKER · ON COMMENCE DOUX` | « On commence **doux.** Une question. Une vraie. » |
-| 12–17 s | **Dégât Débat** : carte *Perso et Relations* (à fournir, 4-5). Écran en deux, POUR / CONTRE, les deux avatars se chambrent. | `DÉGÂT DÉBAT · ON SE CHAMBRE` | « Puis on **s'embrouille.** Pour de faux. Enfin… presque. » |
+| 7–12 s | **Icebreaker** : carte *Cœur à Cœur* (à remplacer par une vraie carte, intensité 3). Ils répondent chacun leur tour, sourires. | `ICEBREAKER · ON COMMENCE DOUX` | « On commence **doux.** Une question. Une vraie. » |
+| 12–17 s | **Dégât Débat** : carte *Perso et Relations* (à remplacer par une vraie carte, 4-5). Écran en deux, POUR / CONTRE, les deux avatars se chambrent. | `DÉGÂT DÉBAT · ON SE CHAMBRE` | « Puis on **s'embrouille.** Pour de faux. Enfin… presque. » |
 | 17–23 s | **Qui de nous** : deux doigts qui pointent, chacun vers l'autre, puis vers soi (rire). Compte à rebours 3-2-1. | `QUI DE NOUS DEUX…` | « Qui de nous deux… ? Les doigts **partent tout seuls.** » |
 | 23–27 s | **Révélation** : le flou de la carte du début se dissipe, carte *Qui de nous* intensité 5 (à remplacer par une vraie carte). Un avatar rougit, l'autre éclate de rire. | `INTENSITÉ 5` | « Et cette carte ? **La voilà. Bon courage.** » |
 | 27–30 s | Logo + signature + « Disponible sur iOS et Android ». | `Playlink` | *(posée, complice)* « Playlink. Le date où on se parle **vraiment.** » |
@@ -125,7 +125,7 @@ Note : le visuel de Dilemme est gris (c'est voulu : « pas de bonne réponse »)
 
 ---
 
-**Règle pour les 8 scénarios suivants** : chacun **ouvre sur une carte d'intensité 5 floutée** (hook) et la **dévoile avant le logo**, comme dans les scénarios 1 et 2. Les cartes d'exemple ci-dessous sont provisoires, à remplacer par celles du tableau « Cartes à fournir ».
+**Règle pour les 8 scénarios suivants** : chacun **ouvre sur une carte d'intensité 5 floutée** (hook) et la **dévoile avant le logo**, comme dans les scénarios 1 et 2. Les cartes d'exemple ci-dessous sont provisoires, à remplacer par celles du tableau « Cartes à utiliser ».
 
 ---
 
