@@ -6,8 +6,8 @@ Sources : `playlink-mobile/docs/playlink-brand-context.md` (ton, pitchs, couleur
 ---
 
 ## Décisions validées
-- **Production** : tout est fabriqué ici, en **motion design pur** (scènes HTML animées, rendues en MP4 1080×1920 avec les couleurs exactes des jeux, comme les slides de règles). Pas de plans filmés : les ✦ ci-dessous deviennent des avatars emoji qui réagissent.
-- **Voix** : je ne peux pas générer d'audio. Je livre la vidéo **muette + sous-titres incrustés + timecodes exacts** ; tu génères la voix (ElevenLabs ou équivalent) en suivant les scripts, tu m'envoies les MP3, et **je les monte** (calage, ducking de la musique, −14 LUFS).
+- **Production** : en **motion design pur** (avatars emoji et écrans de l'app, comme la v6), réalisée de ton côté. Ce document ne contient que les **scénarios** : minutage, image, texte à l'écran, voix off.
+- **Voix** : générée ou enregistrée de ton côté en suivant les lignes et les indications de ton de chaque tableau.
 - **Appel à l'action** : « **Disponible sur iOS et Android** ».
 - **Plateformes** : TikTok, Reels, Shorts (organique, pas de pub payante).
 - **Angle** : la **forte intensité** (4 à 5) fait cliquer. Deux jeux à pousser pour le couple (2 joueurs sur 1 téléphone) : **Icebreaker, Dégât Débat, Qui de nous**.
@@ -44,8 +44,8 @@ Logo en éventail de 4 cartes + « **Playlink** » + « **Disponible sur iOS et 
 4. **Intensité ≠ explicite.** Les cartes d'intensité 5 gênent, font débattre, font avouer : elles n'ont pas besoin d'être sexuelles. Montrer des cartes *Secrets*, *Deep Talk*, *Éthique et Morale*, *Spicy* **édulcorées** ; garder les barres de censure pour le reste. TikTok et Instagram modèrent le contenu suggestif, même en organique, et un retrait coûte plus qu'un hook un peu plus sage.
 5. **Question en commentaire épinglé** (« Ta réponse ? ») pour déclencher l'engagement.
 
-### Cartes à fournir (je n'ai pas accès au back-office)
-Les scripts utilisent pour l'instant des cartes d'exemple du code. Pour la version finale, il me faut de **vraies cartes d'intensité 4-5** (idéalement 2 par jeu), à exporter du back-office en CSV filtré sur l'intensité :
+### Cartes à utiliser (à prendre dans le back-office)
+Les scripts utilisent des cartes d'exemple du code. Pour la version finale, remplacer par de **vraies cartes d'intensité 4-5** (idéalement 2 par jeu), à exporter du back-office en CSV filtré sur l'intensité :
 
 | Script | Carte(s) à fournir |
 |---|---|
@@ -79,7 +79,7 @@ Les scripts utilisent pour l'instant des cartes d'exemple du code. Pour la versi
 | 6–12 s | Écran d'accueil Playlink. Les 8 cartes de jeux défilent, chacune avec son glow. SFX *swish* à chaque carte. | `8 JEUX` | *(l'énergie monte)* « **Huit jeux.** Choisis ton poison. » |
 | 12–18 s | « C'est à ton tour ! » → *Voir la carte* → carte. Avatars : l'un éclate de rire, l'autre se cache le visage. | — | *(rythmé, 3 coups)* « Tu **tires.** Tu **lis.** Tu **assumes.** » |
 | 18–23 s | Vote : « Est-ce que Léa mérite un point ? ». Les pouces montent en même temps. +1 qui pop. | `LA TABLE VOTE` | « La table vote. **Pas d'appel.** » |
-| 23–27 s | Curseur d'intensité qui glisse de 1 à 5 ; le flou de la carte du début **se dissipe** et la carte (à fournir) apparaît. Les avatars réagissent. | `INTENSITÉ 5` | *(complice, plus bas)* « Toi, tu choisis jusqu'où. **Voilà la carte.** » |
+| 23–27 s | Curseur d'intensité qui glisse de 1 à 5 ; le flou de la carte du début **se dissipe** et la carte (à remplacer par une vraie carte) apparaît. Les avatars réagissent. | `INTENSITÉ 5` | *(complice, plus bas)* « Toi, tu choisis jusqu'où. **Voilà la carte.** » |
 | 27–30 s | Logo + signature + « Disponible sur iOS et Android ». | `Playlink` | *(posée, lente)* « Playlink. Ta soirée **commence maintenant.** » |
 
 ---
@@ -97,7 +97,7 @@ Les scripts utilisent pour l'instant des cartes d'exemple du code. Pour la versi
 | 7–12 s | **Icebreaker** : carte *Cœur à Cœur* (à fournir, intensité 3). Ils répondent chacun leur tour, sourires. | `ICEBREAKER · ON COMMENCE DOUX` | « On commence **doux.** Une question. Une vraie. » |
 | 12–17 s | **Dégât Débat** : carte *Perso et Relations* (à fournir, 4-5). Écran en deux, POUR / CONTRE, les deux avatars se chambrent. | `DÉGÂT DÉBAT · ON SE CHAMBRE` | « Puis on **s'embrouille.** Pour de faux. Enfin… presque. » |
 | 17–23 s | **Qui de nous** : deux doigts qui pointent, chacun vers l'autre, puis vers soi (rire). Compte à rebours 3-2-1. | `QUI DE NOUS DEUX…` | « Qui de nous deux… ? Les doigts **partent tout seuls.** » |
-| 23–27 s | **Révélation** : le flou de la carte du début se dissipe, carte *Qui de nous* intensité 5 (à fournir). Un avatar rougit, l'autre éclate de rire. | `INTENSITÉ 5` | « Et cette carte ? **La voilà. Bon courage.** » |
+| 23–27 s | **Révélation** : le flou de la carte du début se dissipe, carte *Qui de nous* intensité 5 (à remplacer par une vraie carte). Un avatar rougit, l'autre éclate de rire. | `INTENSITÉ 5` | « Et cette carte ? **La voilà. Bon courage.** » |
 | 27–30 s | Logo + signature + « Disponible sur iOS et Android ». | `Playlink` | *(posée, complice)* « Playlink. Le date où on se parle **vraiment.** » |
 
 ---
@@ -270,8 +270,3 @@ En comparant avec `playlink-brand-context.md`, 5 points de mes slides de règles
 | **Chrono (Mime, Devine le mot)** | « Sortez un chrono » | Mime : « le chrono s'en fout de ta dignité » (donc il y a un chrono) |
 
 Couleur de Dilemme : j'ai utilisé un gris foncé `#6B7280 → #374151` par estimation ; la doc donne `#696A6B → #CDCFD1` (gris clair).
-
-## Livrables possibles ensuite
-- Version **15 s** de chaque scénario (hook + 1 démo + logo) pour les stories.
-- Version **anglaise** (le ton FR reste la référence).
-- **Storyboard** image par image (HTML animé, comme les slides de règles) pour valider avant de produire.
