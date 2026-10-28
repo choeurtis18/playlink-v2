@@ -5,6 +5,15 @@ Sources : `playlink-mobile/docs/playlink-brand-context.md` (ton, pitchs, couleur
 
 ---
 
+## Décisions validées
+- **Production** : tout est fabriqué ici, en **motion design pur** (scènes HTML animées, rendues en MP4 1080×1920 avec les couleurs exactes des jeux, comme les slides de règles). Pas de plans filmés : les ✦ ci-dessous deviennent des avatars emoji qui réagissent.
+- **Voix** : je ne peux pas générer d'audio. Je livre la vidéo **muette + sous-titres incrustés + timecodes exacts** ; tu génères la voix (ElevenLabs ou équivalent) en suivant les scripts, tu m'envoies les MP3, et **je les monte** (calage, ducking de la musique, −14 LUFS).
+- **Appel à l'action** : « **Disponible sur iOS et Android** ».
+- **Plateformes** : TikTok, Reels, Shorts (organique, pas de pub payante).
+- **Angle** : la **forte intensité** (4 à 5) fait cliquer. Deux jeux à pousser pour le couple (2 joueurs sur 1 téléphone) : **Icebreaker, Dégât Débat, Qui de nous**.
+
+---
+
 ## 0. Règles communes
 
 ### Format
@@ -13,7 +22,7 @@ Sources : `playlink-mobile/docs/playlink-brand-context.md` (ton, pitchs, couleur
 - **Fond** `#0B0A0F`, la couleur du jeu en glow derrière (comme l'app). Titres en Fraunces, labels en JetBrains Mono.
 - **Sous-titres incrustés** sur toute la voix : 80 % des vues se font sans le son.
 - **Hook dans la 1ʳᵉ seconde** : un texte + un son, jamais un logo.
-- ✦ = plan qui gagne à être **filmé en vrai** (potes qui réagissent). Sans tournage, remplacer par des avatars emoji, comme dans la v6 : tout fonctionne en motion design pur.
+- ✦ = plan de réaction : en motion design, il est rendu par des **avatars emoji** (comme dans la v6) qui rient, rougissent ou se figent.
 
 ### Voix : pourquoi elle manque de punch
 Je n'ai pas pu écouter ta v6 (je ne peux pas transcrire l'audio ici). Les niveaux sont corrects (moyenne −17 dB, pic −1,4 dB) : ce n'est donc pas un problème de volume, mais de **diction et de rythme**. Ce qui rend une voix off punchy :
@@ -26,8 +35,30 @@ Je n'ai pas pu écouter ta v6 (je ne peux pas transcrire l'audio ici). Les nivea
 7. Si possible, **enregistrer la voix à la main** (même au téléphone) : c'est 10× plus vivant. Les scripts sont écrits pour être dits, pas lus.
 
 ### Signature de fin (toutes les vidéos)
-Logo en éventail de 4 cartes + « **Playlink** » + ligne du bas : « 8 jeux · hors-ligne · gratuit ». Le « gratuit » est valable pour la V1 uniquement (voir le brand context : ne rien promettre sur le freemium).
-CTA à choisir selon l'état des stores : « Disponible sur iOS et Android » ou « Pré-inscris-toi sur playlink-games.fr ».
+Logo en éventail de 4 cartes + « **Playlink** » + « **Disponible sur iOS et Android** » + ligne du bas : « 8 jeux · hors-ligne · gratuit ». Le « gratuit » est valable pour la V1 uniquement (voir le brand context : ne rien promettre sur le freemium).
+
+### Spécial TikTok / Reels / Shorts : la forte intensité comme moteur
+1. **Hook = une carte d'intensité 5 floutée** (« Qui de nous… ████████ ? », 5 points allumés, bip de censure). La curiosité retient mieux que n'importe quel logo.
+2. **Révélation à la fin** : la carte du début se dévoile aux ~25 s, avec la réaction. C'est ce qui pousse à regarder jusqu'au bout.
+3. **Boucle** : la dernière image reprend la première (carte floutée), pour que la vidéo reboucle sans coupure.
+4. **Intensité ≠ explicite.** Les cartes d'intensité 5 gênent, font débattre, font avouer : elles n'ont pas besoin d'être sexuelles. Montrer des cartes *Secrets*, *Deep Talk*, *Éthique et Morale*, *Spicy* **édulcorées** ; garder les barres de censure pour le reste. TikTok et Instagram modèrent le contenu suggestif, même en organique, et un retrait coûte plus qu'un hook un peu plus sage.
+5. **Question en commentaire épinglé** (« Ta réponse ? ») pour déclencher l'engagement.
+
+### Cartes à fournir (je n'ai pas accès au back-office)
+Les scripts utilisent pour l'instant des cartes d'exemple du code. Pour la version finale, il me faut de **vraies cartes d'intensité 4-5** (idéalement 2 par jeu), à exporter du back-office en CSV filtré sur l'intensité :
+
+| Script | Carte(s) à fournir |
+|---|---|
+| Soirée, Couple | 1 carte *Qui de nous* intensité 5 (hook flouté + révélation) |
+| Couple | 1 carte *Icebreaker* (Cœur à Cœur, 3), 1 carte *Dégât Débat* (Perso et Relations, 4-5) |
+| Action ou Vérité | 1 *Vérité Spicy* + 1 *Action Spicy* (5) |
+| Icebreaker | 1 *Deep Talk* (5) |
+| Dégât Débat | 1 *Éthique et Morale* (5) |
+| Qui de nous | 1 *Secrets et Confessions* (5) |
+| Mime | 1 mot d'intensité 5 |
+| Thé ou café | 1 mot *Difficile* (5) |
+| Dilemme | 1 *Identité et Valeurs* (5) |
+| Devine le mot | 1 mot *Abstrait* (5) |
 
 ### Écrans de l'app à montrer (déroulé réel)
 1. **« C'est à ton tour ! »** + prénom + bouton *Voir la carte*
@@ -43,31 +74,31 @@ CTA à choisir selon l'état des stores : « Disponible sur iOS et Android » ou
 
 | t | Image | Texte écran | Voix off |
 |---|---|---|---|
-| 0–3 s | ✦ Salon, 5 potes sur le canapé, tous le nez dans leur téléphone. Silence, lumière bleue. | `SOIRÉE · 23H` | *(blasée, sèche)* « **23 heures.** Cinq potes. Cinq téléphones. » |
-| 3–6 s | Un ami lève la tête, pose son téléphone sur la table. Les autres suivent. 1 seul reste au centre. | `UN SEUL TÉLÉPHONE` | *(sourire dans la voix)* « Pose le tien. **Un seul** suffit. » |
+| 0–3 s | **Hook** : carte *Qui de nous* sombre, texte flouté « Qui de nous… ████████ ? », 5 points allumés, **bip** de censure. | `INTENSITÉ 5` | *(sèche)* « **Intensité cinq.** » |
+| 3–6 s | Zoom arrière : un salon, 5 avatars autour d'un seul téléphone posé au centre, silence. | `5 POTES · 1 TÉLÉPHONE` | « Cinq potes. **Un seul** téléphone. » |
 | 6–12 s | Écran d'accueil Playlink. Les 8 cartes de jeux défilent, chacune avec son glow. SFX *swish* à chaque carte. | `8 JEUX` | *(l'énergie monte)* « **Huit jeux.** Choisis ton poison. » |
-| 12–18 s | « C'est à ton tour ! » → *Voir la carte* → carte. ✦ Gros plans : l'un éclate de rire, l'autre se cache le visage. | — | *(rythmé, 3 coups)* « Tu **tires.** Tu **lis.** Tu **assumes.** » |
-| 18–23 s | Vote : « Est-ce que Léa mérite un point ? ». Les 4 pouces montent en même temps. +1 qui pop. | `LA TABLE VOTE` | « La table vote. **Pas d'appel.** » |
-| 23–27 s | Curseur d'intensité qui glisse de 1 à 5, la couleur passe du bleu au rouge. | `INTENSITÉ 1 → 5` | *(complice, plus bas)* « De sympa… à **« on en reparle jamais ».** » |
-| 27–30 s | Logo + signature. Fond noir, glow rose `#F23A6B`. | `Playlink` | *(posée, lente)* « Playlink. Ta soirée **commence maintenant.** » |
+| 12–18 s | « C'est à ton tour ! » → *Voir la carte* → carte. Avatars : l'un éclate de rire, l'autre se cache le visage. | — | *(rythmé, 3 coups)* « Tu **tires.** Tu **lis.** Tu **assumes.** » |
+| 18–23 s | Vote : « Est-ce que Léa mérite un point ? ». Les pouces montent en même temps. +1 qui pop. | `LA TABLE VOTE` | « La table vote. **Pas d'appel.** » |
+| 23–27 s | Curseur d'intensité qui glisse de 1 à 5 ; le flou de la carte du début **se dissipe** et la carte (à fournir) apparaît. Les avatars réagissent. | `INTENSITÉ 5` | *(complice, plus bas)* « Toi, tu choisis jusqu'où. **Voilà la carte.** » |
+| 27–30 s | Logo + signature + « Disponible sur iOS et Android ». | `Playlink` | *(posée, lente)* « Playlink. Ta soirée **commence maintenant.** » |
 
 ---
 
-## 2. L'app, mode date / couple
+## 2. L'app, mode date / couple (2 joueurs, 1 téléphone)
 
-**Durée** 30 s · **Ton** intime, joueur, un peu timide au début puis charmeur · **Musique** lo-fi chaude / R&B doux.
-**À valider** : l'app permet-elle de jouer à 2 ? Les écrans « passe le téléphone » existent « quand > 1 joueur » (blueprint), donc oui, à confirmer en test.
+**Durée** 30 s · **Ton** intime, charmeur, intensité qui monte · **Musique** lo-fi chaude / R&B doux.
+**Jeux mis en avant** : Icebreaker → Dégât Débat → Qui de nous (du doux au piquant). Les autres jeux se jouent mal à deux.
+**À tester** : « Qui de nous deux… » à 2 joueurs (les deux doigts pointent), pour être sûr que le jeu se comporte comme montré.
 
 | t | Image | Texte écran | Voix off |
 |---|---|---|---|
-| 0–3 s | ✦ Table de resto ou canapé, deux personnes, un blanc. Regards qui fuient. | `PREMIER DATE` | *(voix basse, un sourire)* « Silence. **Le genre qui dure.** » |
-| 3–7 s | Elle sort son téléphone, le pose entre eux, côté écran. Il sourit. | `UN TÉLÉPHONE. DEUX JOUEURS.` | « Au lieu de scroller… **joue.** » |
-| 7–13 s | Carte Icebreaker *Cœur à Cœur*, puis carte *Vérités Flirt* (texte flouté ou court). ✦ Il rit, elle rougit un peu. | `CŒUR À CŒUR · VÉRITÉS FLIRT` | « Des questions qui vont **plus loin** que « tu fais quoi dans la vie ? » » |
-| 13–19 s | Carte *Actions Flirt* ou *Qui de nous : Désir et Attirance*. ✦ Leurs mains se rapprochent sur l'écran. | `ACTIONS FLIRT` | *(voix qui se rapproche)* « Des défis qui font sourire. Et parfois **rougir.** » |
-| 19–24 s | Curseur d'intensité qui monte doucement, le glow vire au rose. | `TU CHOISIS L'INTENSITÉ` | « Tu règles l'intensité. **Vous** décidez jusqu'où. » |
-| 24–30 s | ✦ Ils rient devant l'écran, front contre front. Logo en fondu. | `Playlink` | *(posée, complice)* « Playlink. Le date où on se parle **vraiment.** » |
-
-**Conseil plateformes** : montrer les catégories **Flirt** à l'image, et ne jamais afficher le texte d'une carte *Spicy* en publicité (risque de refus de la pub). Les évoquer par le curseur d'intensité suffit.
+| 0–3 s | **Hook** : carte *Qui de nous* floutée, « Qui de nous deux… ████████ ? », 5 points allumés, bip. Deux avatars se lisent la carte et se regardent. | `INTENSITÉ 5 · À DEUX` | *(voix basse)* « Intensité **cinq.** À deux. » |
+| 3–7 s | Canapé stylisé, deux avatars, un téléphone entre eux, côté écran. | `2 JOUEURS · 1 TÉLÉPHONE` | « Pas besoin d'être dix. **Deux suffisent.** » |
+| 7–12 s | **Icebreaker** : carte *Cœur à Cœur* (à fournir, intensité 3). Ils répondent chacun leur tour, sourires. | `ICEBREAKER · ON COMMENCE DOUX` | « On commence **doux.** Une question. Une vraie. » |
+| 12–17 s | **Dégât Débat** : carte *Perso et Relations* (à fournir, 4-5). Écran en deux, POUR / CONTRE, les deux avatars se chambrent. | `DÉGÂT DÉBAT · ON SE CHAMBRE` | « Puis on **s'embrouille.** Pour de faux. Enfin… presque. » |
+| 17–23 s | **Qui de nous** : deux doigts qui pointent, chacun vers l'autre, puis vers soi (rire). Compte à rebours 3-2-1. | `QUI DE NOUS DEUX…` | « Qui de nous deux… ? Les doigts **partent tout seuls.** » |
+| 23–27 s | **Révélation** : le flou de la carte du début se dissipe, carte *Qui de nous* intensité 5 (à fournir). Un avatar rougit, l'autre éclate de rire. | `INTENSITÉ 5` | « Et cette carte ? **La voilà. Bon courage.** » |
+| 27–30 s | Logo + signature + « Disponible sur iOS et Android ». | `Playlink` | *(posée, complice)* « Playlink. Le date où on se parle **vraiment.** » |
 
 ---
 
@@ -87,10 +118,14 @@ Chaque jeu : flash de sa couleur plein cadre (0,2 s) → carte du jeu → nom en
 | 16–18,5 s | 💬 Thé ou café `#7C3AED` | `Thé ou café` | « Deux mots. **Beaucoup** de frustration. » |
 | 18,5–21 s | ⚖️ Dilemme `#696A6B` | `Dilemme` | « Deux options. **Aucune** bonne. » |
 | 21–23,5 s | 🕵️ Devine le mot `#BE185D` | `Devine le mot` | « Trois indices. **Pas un de plus.** » |
-| 23,5–27 s | Les 8 cartes se rejoignent en éventail (le logo). | `28 catégories · ~1 500 cartes` | « Vingt-huit catégories. **Quinze cents cartes.** » |
-| 27–30 s | Logo + signature. | `Playlink` | « Playlink. **Choisis ton jeu.** » |
+| 23,5–27 s | Les 8 cartes se rejoignent en éventail (le logo), le curseur d'intensité monte à 5 sur chacune. | `28 CATÉGORIES · INTENSITÉ 1 → 5` | « Vingt-huit catégories. **Jusqu'où tu vas ?** » |
+| 27–30 s | Logo + signature + « Disponible sur iOS et Android ». | `Playlink` | « Playlink. **Choisis ton jeu.** » |
 
 Note : le visuel de Dilemme est gris (c'est voulu : « pas de bonne réponse »). Dans le panorama, lui donner un **liseré blanc** pour qu'il ressorte entre deux couleurs vives.
+
+---
+
+**Règle pour les 8 scénarios suivants** : chacun **ouvre sur une carte d'intensité 5 floutée** (hook) et la **dévoile avant le logo**, comme dans les scénarios 1 et 2. Les cartes d'exemple ci-dessous sont provisoires, à remplacer par celles du tableau « Cartes à fournir ».
 
 ---
 
